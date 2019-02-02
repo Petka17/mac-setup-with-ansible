@@ -1,0 +1,5 @@
+---
+- name: Install Latest Vim
+  homebrew: name=vim state=latest
+
+  #  TODO: Add .vimrc

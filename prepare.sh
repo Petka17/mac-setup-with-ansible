@@ -1,18 +1,36 @@
 #!/usr/bin/env bash
 
-# Prepare to install Command Line Tools
-touch "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+###
+# This script was inspired by these ansible tasks 
+# https://github.com/elliotweiser/ansible-osx-command-line-tools/blob/master/tasks/main.yml
+###
 
-echo "-> Check whether Command Line Tools are installed"
-pkg_name=`softwareupdate -l | grep -B 1 -E 'Command Line Tools' | awk -F'*' '/^ +\*/ {print $2}' | sed 's/^ *//' | grep -iE '[0-9|.]' | sort | tail -n1`
+# Check whether CommandLineTools is installed
+if [[ ! -d /Library/Developer/CommandLineTools ]]; then
+    # Prepare to install Command Line Tools
+    touch "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
 
-if [[ $pkg_name != '' ]]; then
-    echo "-> Install ${pkg_name}"
-    softwareupdate -i "${pkg_name}"
+    echo "-> Getting CommandLineTools package name"
+    pkg_name=`softwareupdate -l | grep -B 1 -E 'Command Line Tools' | awk -F'*' '/^ +\*/ {print $2}' | sed 's/^ *//' | grep -iE '[0-9|.]' | sort | tail -n1`
+
+    if [[ $pkg_name != '' ]]; then
+        echo "-> Installing ${pkg_name}"
+        softwareupdate -i "${pkg_name}"
+    fi
+
+    # Cleanup
+    rm -f "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+else
+    echo "[x] CommandLineTools Installed"
 fi
 
-# Cleanup
-rm -f "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+# Check whether ansible is installed
+if ! which ansible >/dev/null; then
+    # Check whether pip is installed
+    if ! which pip >/dev/null; then pip_install_cmd="easy_install pip; "; fi
 
-echo "-> Install Pip and Ansible"
-sudo -- sh -c "easy_install pip; pip install ansible"
+    echo "-> Installing Ansible"
+    sudo -- sh -c "${pip_install_cmd} pip install ansible"
+else
+    echo "[x] Ansible installed"
+fi

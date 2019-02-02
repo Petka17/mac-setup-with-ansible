@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+
+  tasks:
+    - import_tasks: tasks/homebrew.yml
+      tags: ['brew']
+
+    - import_tasks: tasks/basic_cli_tools.yml
+      tags: ['basic-tools']
+  
+    - import_tasks: tasks/vim.yml
+      tags: ['vim']
