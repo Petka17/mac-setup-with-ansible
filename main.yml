@@ -4,11 +4,22 @@
   gather_facts: yes
 
   tasks:
+    # Essencial package manager for mac
     - import_tasks: tasks/homebrew.yml
       tags: ['brew']
 
+    # No setup needed
     - import_tasks: tasks/basic_cli_tools.yml
       tags: ['basic-tools']
-  
+
+    # Need this cli  to get secrets from 1password
+    - import_tasks: tasks/1password_cli.yml
+      tags: ['1pass']
+
+    # Login to 1password cli and take all secrets
+    - import_tasks: tasks/get_secrets.yml
+      tags: ['secrets']
+
+    # Vim
     - import_tasks: tasks/vim.yml
       tags: ['vim']
