@@ -1,0 +1,5 @@
+---
+- name: Install Latest Git
+  homebrew: name=git state=latest
+
+  # TODO: add gitconfig

@@ -1,6 +1,0 @@
----
-- name: Install Latest Make
-  homebrew: name=cmake state=latest
-
-- name: Install Latest GNU Privacy Guard
-  homebrew: name=gpg state=latest

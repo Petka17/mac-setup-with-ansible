@@ -17,8 +17,8 @@ In order to do that run `prepare.sh`
 > Note: you will need to enter sudo password along the way
 
 # Run Playbook
-`ansible-playbook mail.yml -i inventory -K -t`
-
+You need to run
+`ansible-playbook mail.yml`
 
 # TODO
 1. Install Mac Updates

@@ -2,24 +2,109 @@
 - hosts: localhost
   connection: local
   gather_facts: yes
+  vars_files:
+    - group_vars/secrets.yml
 
   tasks:
-    # Essencial package manager for mac
-    - import_tasks: tasks/homebrew.yml
-      tags: ['brew']
+    # Mac Preferences: QuickLook, Bluetooth, Color
+    # Install mac security updates
 
-    # No setup needed
-    - import_tasks: tasks/basic_cli_tools.yml
-      tags: ['basic-tools']
+    # Ensure keys
+    - import_tasks: tasks/ids.yml
+      tags: ['ids']
 
-    # Need this cli  to get secrets from 1password
-    - import_tasks: tasks/1password_cli.yml
-      tags: ['1pass']
-
-    # Login to 1password cli and take all secrets
-    - import_tasks: tasks/get_secrets.yml
-      tags: ['secrets']
+    # Git + Git Config
+    - import_tasks: tasks/git.yml
+      tags: ['git']
 
     # Vim
     - import_tasks: tasks/vim.yml
       tags: ['vim']
+
+    # Sublime, Atom (plugins ?)
+
+    # iTerm
+
+    # zsh + oh-my-zsh + zsh-highligh + zsh-complete + zsh config
+
+    # tmux + tmuxinator (or tmuxp)
+    # pyenv 
+
+    # nvm
+
+    # yarn
+
+    # elm elm-format elm-analyze elm-reactor create-elm-app
+
+    # dart + flutter 
+
+    # rbenv (?)
+    # jevn + java + maven
+
+    # Unarchiver
+
+    # httpie
+    # Postman
+
+    # Spectacle
+    - name: Install Spectacle 
+      homebrew_cask: name=spectacle state=latest
+      tags: ['utils']
+
+    # Tunnelblick (import config, start connection)
+    - name: Install tunnelblick
+      homebrew_cask: name=tunnelblick state=latest
+      tags: ['utils']
+
+    # Chrome + Extentions
+
+    # Firefox, opera, tor, sphere (?)
+
+    
+    # VSCode + plugins
+    # Xcode
+    # Android Studio (+avd, Android File Transfer)
+    # Idea CE
+    
+    # Datagrip
+    # Mongo Compass
+
+    # Docker
+
+    # VirtualBox
+
+    # Vargant
+
+    # 1Password
+    - name: Install 1Password App
+      homebrew_cask: name=1password state=latest
+      tags: ['1pass']
+
+    # Dropbox
+    # Google Drive (?)
+
+    # Franz
+    # Telegram
+    # Skype
+
+    # Trello
+    # RealTimeBoard
+    # VLC
+
+    # Microsoft Remote Desktop
+    # Team Viewer
+
+    # Figma
+    # Boxy SVG
+    # Icon Set Creator
+
+    # Microsoft Office
+
+    # CleanMyMac
+    # Parallels Tools
+
+    # Grammarly
+    # Torrent
+
+    # WebMoney Keeper
+    # Electrum

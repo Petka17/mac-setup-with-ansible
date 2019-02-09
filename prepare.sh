@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ###
-# This script was inspired by these ansible tasks 
+# The first patr of this script was inspired by these ansible tasks 
 # https://github.com/elliotweiser/ansible-osx-command-line-tools/blob/master/tasks/main.yml
 ###
 
@@ -24,13 +24,17 @@ else
     echo "[x] CommandLineTools Installed"
 fi
 
+if ! which brew >/dev/null; then
+    echo "-> Installing Homebrew"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+else
+    echo "[x] Homebrew installed" 
+fi
+
 # Check whether ansible is installed
 if ! which ansible >/dev/null; then
-    # Check whether pip is installed
-    if ! which pip >/dev/null; then pip_install_cmd="easy_install pip; "; fi
-
     echo "-> Installing Ansible"
-    sudo -- sh -c "${pip_install_cmd} pip install ansible"
+    brew install ansible
 else
     echo "[x] Ansible installed"
 fi
