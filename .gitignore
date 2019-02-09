@@ -1,7 +1,7 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-# Created by https://www.gitignore.io/api/macos,visualstudiocode,ansible
-# Edit at https://www.gitignore.io/?templates=macos,visualstudiocode,ansible
+# Created by https://www.gitignore.io/api/ansible,macos,visualstudiocode,vagrant
+# Edit at https://www.gitignore.io/?templates=ansible,macos,visualstudiocode,vagrant
 
 ### Ansible ###
 *.retry
@@ -34,6 +34,16 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### Vagrant ###
+# General
+.vagrant/
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+# *.logs
+
+### Vagrant Patch ###
+*.box
+
 ### VisualStudioCode ###
 .vscode/*
 
@@ -41,7 +51,7 @@ Temporary Items
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/macos,visualstudiocode,ansible
+# End of https://www.gitignore.io/api/ansible,macos,visualstudiocode,vagrant
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
