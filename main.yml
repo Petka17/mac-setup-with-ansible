@@ -8,6 +8,8 @@
   tasks:
     # Mac Preferences: QuickLook, Bluetooth, Color
     # Install mac security updates
+    - import_tasks: tasks/mac_pref.yml
+      tags: ['prefs']
 
     # Ensure keys
     - import_tasks: tasks/ids.yml
@@ -22,6 +24,8 @@
       tags: ['vim']
 
     # Sublime, Atom (plugins ?)
+    - name: Ensure Latest Sublime
+      homebrew_cask: name=sublime state=latest
 
     # iTerm
 
@@ -47,12 +51,12 @@
     # Postman
 
     # Spectacle
-    - name: Install Spectacle 
+    - name: Ensure Lates Spectacle 
       homebrew_cask: name=spectacle state=latest
       tags: ['utils']
 
     # Tunnelblick (import config, start connection)
-    - name: Install tunnelblick
+    - name: Ensure Lastest Tunnelblick
       homebrew_cask: name=tunnelblick state=latest
       tags: ['utils']
 
