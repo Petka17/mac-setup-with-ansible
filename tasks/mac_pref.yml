@@ -24,7 +24,6 @@
 
   - name: "AppStore - Check for software updates frequency"
     osx_defaults: { domain: 'com.apple.SoftwareUpdate', key: 'ScheduleFrequency', type: int, value: 0 }
-    notify: restart AppStore
 
   - name: "AppStore - Show debug menu"
     osx_defaults: { domain: 'com.apple.SoftwareUpdate', key: 'ShowDebugMenu', type: bool, value: false }

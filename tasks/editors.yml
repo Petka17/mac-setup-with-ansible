@@ -9,12 +9,8 @@
       src: files/vimrc
       remote_src: yes
       force: yes
-  
-  - name: Ensure autoload directory
-    file: path="{{ home_path }}/.vim/autoload" state=directory
-        
-  - name: Ensure vim plugins
-    shell: vim -E -s -c "source {{ home_path }}/.vimrc" +PluginInstall +qall
+
+  # TODO: install plugins  
         
 - name: Ensure Latest Sublime
   homebrew_cask: name=sublime state=latest

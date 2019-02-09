@@ -7,7 +7,7 @@ This scripts was designed to run under fresh Mojave installation.
 # How to get this project on fresh machine 
 In the terminal execute the following commands
 ```bash
-git clone git@github.com:petka17/mac-setup-with-ansible
+git clone https://github.com/petka17/mac-setup-with-ansible
 cd mac-setup-with-ansible
 ```
 # Prepare

@@ -57,6 +57,7 @@
         dest: "{{ custom_alias_path }}"
         src: files/custom_aliases
         remote_src: yes
+        force: yes
 
     - name: Ensure source of alias file
       lineinfile:

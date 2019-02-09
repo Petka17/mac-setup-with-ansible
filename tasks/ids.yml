@@ -1,17 +1,18 @@
 ---
-- block:
-  - name: Load secrent info
-    include_vars:
-      file: group_vars/secrets.yml
+- name: Load secrets info
+  include_vars:
+    file: group_vars/secrets.yml
+  no_log: yes
 
-  - name: Ensure private key
-    copy:
-      dest: "{{ keys.private.path }}"
-      content: "{{ keys.private.content }}"
-      mode: 0600
+- name: Ensure private key
+  copy:
+    dest: "{{ keys.private.path }}"
+    content: "{{ keys.private.content }}"
+    mode: 0600
+  no_log: yes
 
-  - name: Ensure public key
-    copy:
-      dest: "{{ keys.public.path }}"
-      content: "{{ keys.public.content}}"
-      mode: 0644
+- name: Ensure public key
+  copy:
+    dest: "{{ keys.public.path }}"
+    content: "{{ keys.public.content}}"
+    mode: 0644

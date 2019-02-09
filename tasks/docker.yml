@@ -8,6 +8,7 @@
       dest: "{{ docker_alias_path }}"
       src: files/docker_aliases
       remote_src: yes
+      force: yes
 
   - name: Ensure source of alias file
     lineinfile:
