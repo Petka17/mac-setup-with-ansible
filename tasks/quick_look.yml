@@ -1,0 +1,15 @@
+---
+- name: Ensure quick look plugins
+  homebrew_cask: 
+    name:
+      - qlcolorcode
+      - qlimagesize
+      - qlmobi
+      - qlprettypatch
+      - qlstephen
+      - qlswift
+      - qlvideo
+      - quicklook-csv
+      - quicklook-json
+      - qlcommonmark
+    state: latest
