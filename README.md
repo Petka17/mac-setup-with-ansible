@@ -7,9 +7,8 @@ This scripts was designed to run under fresh Mojave installation.
 # How to get this project on fresh machine 
 In the terminal execute the following commands
 ```bash
-curl -L -O https://github.com/Petka17/mac-setup-with-ansible/archive/master.zip
-unzip master.zip
-cd mac-setup-with-ansible-master
+git clone git@github.com:petka17/mac-setup-with-ansible
+cd mac-setup-with-ansible
 ```
 # Prepare
 You need to install Command Line Tools, pip and ansible itself.  
@@ -19,6 +18,3 @@ In order to do that run `prepare.sh`
 # Run Playbook
 You need to run
 `ansible-playbook mail.yml`
-
-# TODO
-1. Install Mac Updates

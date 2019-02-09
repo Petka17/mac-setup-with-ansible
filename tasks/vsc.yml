@@ -1,0 +1,5 @@
+---
+- name: Install Latest Vim
+  homebrew: name=git state=latest
+
+# TODO: ass gitconfig

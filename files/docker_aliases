@@ -1,0 +1,36 @@
+alias dps='docker ps'           # show running containers
+alias dpsa='docker ps -a'       # show all containers
+alias dpsl='docker ps -l'       # show last container
+alias dpss='docker ps -as'      # show all containers list with size
+alias drm='docker rm -v'        # remove container
+alias drma='docker rm -v $(docker ps -aq)' # remove all containeres
+alias da='docker attach'        # attach
+
+alias dr='docker run -it'           # run container with interactive terminal
+alias drr='docker run -it --rm'     # run container with interactive terminal and remove afterwords
+alias drn='docker run -it --name'   # run named container with interactive terminal
+alias drdn='docker run -itd --name' # run named container with interactive terminal in daemon mode
+
+alias dsp='docker stop'             # stop container
+alias dst='docker start'            # start stopped container
+alias dsta='docker start -ai'       # start stopped container and attached to it
+
+alias dt='docker top'               # show container top
+alias dl='docker logs'              # show container log
+alias ddc='docker diff'             # show container file system diff
+
+alias dbt='docker build -t'         # build new image
+alias di='docker images'            # show image list
+alias dirm='docker rmi'             # remove image
+alias dirma='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")' # remove all images
+
+alias dex='docker exec -it'
+alias ded='docker exec -d'
+
+alias dh='docker history -H --no-trunc' # show container history
+
+alias dccm='docker commit -m'     # commit container changes
+
+alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
+alias div="dockviz images -t -i"  # show image tree with incremental size
+alias divs="dockviz images -t -l" # show image tree only labeled layers

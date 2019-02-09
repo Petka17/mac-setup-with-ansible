@@ -2,37 +2,41 @@
 - hosts: localhost
   connection: local
   gather_facts: yes
-  vars_files:
-    - group_vars/secrets.yml
+
+  vars:
+    home_path: "{{ lookup('env', 'HOME') }}"
+    zshrc_file: "{{ home_path }}/.zshrc"
 
   tasks:
-    # Mac Preferences: QuickLook, Bluetooth, Color
     # Install mac security updates
+
+    # Mac Preferences:  Bluetooth, Color
     - import_tasks: tasks/mac_pref.yml
       tags: ['prefs']
+
+    # QuickLook
 
     # Ensure keys
     - import_tasks: tasks/ids.yml
       tags: ['ids']
 
-    # Git + Git Config
-    - import_tasks: tasks/git.yml
-      tags: ['git']
+    # Ensure Git + Git Config
+    - import_tasks: tasks/vsc.yml
+      tags: ['vsc']
 
     # Vim
-    - import_tasks: tasks/vim.yml
-      tags: ['vim']
+    - import_tasks: tasks/editors.yml
+      tags: ['editors']
 
-    # Sublime, Atom (plugins ?)
-    - name: Ensure Latest Sublime
-      homebrew_cask: name=sublime state=latest
-
-    # iTerm
-
-    # zsh + oh-my-zsh + zsh-highligh + zsh-complete + zsh config
+    # iterm + zsh + oh-my-zsh + zsh-highlight + zsh-complete + zsh config
+    - import_tasks: tasks/terminal.yml
+      tags: ['terminal']
 
     # tmux + tmuxinator (or tmuxp)
     # pyenv 
+
+    # ffmpeg
+    # numpy
 
     # nvm
 
@@ -74,6 +78,8 @@
     # Mongo Compass
 
     # Docker
+    - import_tasks: tasks/docker.yml
+      tags: ['docker']
 
     # VirtualBox
 

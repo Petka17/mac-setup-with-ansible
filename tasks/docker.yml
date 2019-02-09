@@ -1,0 +1,18 @@
+---
+- block:
+  - name: Ensure Docker
+    homebrew_cask: name=docker state=latest
+
+  - name: Ensure alias file
+    copy:
+      dest: "{{ docker_alias_path }}"
+      src: files/docker_aliases
+      remote_src: yes
+
+  - name: Ensure source of alias file
+    lineinfile:
+      path: "{{ zshrc_file }}"
+      line: source {{ docker_alias_path }}
+
+  vars:
+    docker_alias_path: "{{ home_path }}/.aliases/docker" 

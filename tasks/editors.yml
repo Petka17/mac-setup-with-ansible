@@ -1,0 +1,8 @@
+---
+- name: Install Latest Vim
+  homebrew: name=vim state=latest
+
+#  TODO: Add .vimrc
+
+- name: Ensure Latest Sublime
+  homebrew_cask: name=sublime state=latest

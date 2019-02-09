@@ -1,0 +1,118 @@
+---
+- block:
+  - block:
+    - name: Ensure iTerm.app
+      homebrew_cask: name=iterm2 state=latest
+
+    - name: Ensure font tap
+      homebrew_tap: name=homebrew/cask-fonts state=present
+
+    - name: Ensure Droid Font
+      homebrew_cask: name=font-droidsansmono-nerd-font-mono state=latest
+
+    # TODO: Setup iTerm2 profile
+    tags: ['iterm']
+
+  - block:
+    - name: Ensure zsh
+      homebrew: name=zsh state=latest
+
+    - name: Ensure default shell
+      shell: "chsh -s $(which zsh) {{ ansible_user_id }}"
+      become: true
+      register: chsh_result
+      changed_when: "'chsh: no changes made' not in chsh_result.stderr"
+
+    - name: Ensure .zshrc file exist
+      copy: 
+        dest: "{{ zshrc_file }}"
+        content: ""
+        mode: 0644
+        force: no
+
+    - name: Ensure base zsh params
+      lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
+      with_items:
+        - { regexp: '^CASE_SENSITIVE', line: 'CASE_SENSITIVE="false"' }
+        - { regexp: '^HYPHEN_INSENSITIVE', line: 'HYPHEN_INSENSITIVE="true"' }
+        - { regexp: '^DISABLE_AUTO_UPDATE', line: 'DISABLE_AUTO_UPDATE="true"' }
+        - { regexp: '^DISABLE_LS_COLORS', line: 'DISABLE_LS_COLORS="false"' }
+        - { regexp: '^DISABLE_AUTO_TITLE', line: 'DISABLE_AUTO_TITLE="true"' }
+        - { regexp: '^ENABLE_CORRECTION', line: 'ENABLE_CORRECTION="false"' }
+        - { regexp: '^COMPLETION_WAITING_DOTS', line: 'COMPLETION_WAITING_DOTS="true"' }
+        - { regexp: '^DISABLE_UNTRACKED_FILES_DIRTY', line: 'DISABLE_UNTRACKED_FILES_DIRTY="true"' }
+        - { regexp: '^HIST_STAMPS', line: 'HIST_STAMPS="yyyy-mm-dd"' }
+        
+    - name: Ensure base shell environment
+      lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
+      with_items:
+        - { regexp: '^export EDITOR', line: 'export EDITOR="vim"' }
+        - { regexp: '^export SSH_KEY_PATH', line: 'export SSH_KEY_PATH="{{ home_path }}/.ssh/rsa_id"' }
+    
+    - name: Ensure alias folder
+      file: path={{ home_path }}/.aliases state=directory
+
+    - name: Ensure alias file
+      copy:
+        dest: "{{ custom_alias_path }}"
+        src: files/custom_aliases
+        remote_src: yes
+
+    - name: Ensure source of alias file
+      lineinfile:
+          path: "{{ zshrc_file }}"
+          line: source {{ custom_alias_path }}
+
+    vars:
+      custom_alias_path: "{{ home_path }}/.aliases/custom"
+    
+    tags: ['zsh']
+          
+  - block:
+    - name: Ensure oh-my-zsh
+      git:
+        repo: https://github.com/robbyrussell/oh-my-zsh.git
+        dest: "{{ oh_my_zsh_home }}"
+        update: yes
+        force: yes
+    
+    - name: Ensure ZSH var export in zshrc
+      lineinfile: dest="{{ zshrc_file }}" regexp='^export ZSH' line="export ZSH={{ oh_my_zsh_home }}"
+
+    - name: Ensure powerlevel9k theme
+      git:
+        repo: https://github.com/bhilburn/powerlevel9k.git
+        dest: "{{ oh_my_zsh_home }}/custom/themes/powerlevel9k"
+        update: yes
+        force: yes
+    
+    - name: Ensure zsh theme
+      lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
+      with_items:
+        - { regexp: '^ZSH_THEME', line: 'ZSH_THEME="powerlevel9k/powerlevel9k"' }
+        - { regexp: '^POWERLEVEL9K_MODE', line: 'POWERLEVEL9K_MODE="nerdfont-complete"' }
+
+    - name: Ensure plugins
+      git: 
+        repo: https://github.com/zsh-users/{{ item }} 
+        dest: "{{ oh_my_zsh_home }}/custom/plugins/{{ item }}"
+        update: yes
+        force: yes
+      with_items:
+        - zsh-completions
+        - zsh-autosuggestions
+        - zsh-syntax-highlighting
+
+    - name: Ensure zsh theme
+      lineinfile:
+        dest: "{{ zshrc_file }}"
+        regexp: '^plugins'
+        line: plugins=(vi-mode git zsh-completions httpie zsh-autosuggestions zsh-syntax-highlighting)
+      
+    - name: Ensure oh-my-zsh source
+      lineinfile: dest={{ zshrc_file }} line="source $ZSH/oh-my-zsh.sh"
+  
+    vars:
+      oh_my_zsh_home: "{{ home_path }}/.oh-my-zsh"
+
+    tags: ['ohmyzsh']
