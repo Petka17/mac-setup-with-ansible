@@ -1,8 +1,23 @@
 ---
-- name: Install Latest Vim
-  homebrew: name=vim state=latest
+- block:
+  - name: Install Latest Vim
+    homebrew: name=vim state=latest
 
-#  TODO: Add .vimrc
-
+  - name: Ensure vimrc
+    copy:
+      dest: "{{ home_path }}/.vimrc"
+      src: files/vimrc
+      remote_src: yes
+      force: yes
+  
+  - name: Ensure autoload directory
+    file: path="{{ home_path }}/.vim/autoload" state=directory
+        
+  - name: Ensure vim plugins
+    shell: vim -E -s -c "source {{ home_path }}/.vimrc" +PluginInstall +qall
+        
 - name: Ensure Latest Sublime
   homebrew_cask: name=sublime state=latest
+
+- name: Ensure Latest Atom
+  homebrew_cask: name=atom state=latest
