@@ -15,4 +15,8 @@
   copy:
     dest: "{{ keys.public.path }}"
     content: "{{ keys.public.content}}"
-    mode: 0644
+
+- name: Ensure ssh config
+  copy:
+    dest: "{{ home_path }}/.ssh/config"
+    content: "{{ ssh_config }}"

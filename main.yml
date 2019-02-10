@@ -35,6 +35,8 @@
       tags: ['terminal']
 
     # tmux + tmuxinator (or tmuxp)
+    - import_tasks: tasks/tmux.yml
+      tags: ['tmux']
 
     # pyenv 
 

@@ -1,0 +1,19 @@
+# ~/.tmuxinator/yayadb.yml
+
+name: yayadb
+root: ~/code/projects/yaya
+
+on_project_stop: exit
+
+windows:
+  - servers:
+      layout: even-vertical
+      panes:
+        - dev:
+          - ssh yayad
+        - release:
+          - ssh yayas
+        - prod:
+          - ssh yayap
+  - cicd:
+    - ssh yayac

@@ -1,0 +1,58 @@
+---
+- block:
+  - name: Ensure Latest tmux
+    homebrew: name=tmux state=latest
+
+  - name: Ensure plugins directory
+    file: dest={{ tmux_plugin_path }} state=directory
+
+  - name: Ensure tmux plugin manager
+    git:
+      dest: "{{ tmux_plugin_path }}"
+      repo: https://github.com/tmux-plugins/tpm
+      force: yes
+
+  - name: Ensure tmux config
+    copy:
+      dest: "{{ home_path }}/.tmux.conf"
+      src: files/tmux.conf
+      remote_src: yes
+      force: yes
+
+  vars:
+    tmux_plugin_path: "{{ home_path }}/.tmux/plugins/tpm/"
+
+- block:
+  - name: Ensure Latest tmuxinator
+    gem: name=tmuxinator state=latest user_install=no
+    become: yes
+
+  - name: Ensure tmuxinator config file
+    copy: 
+      dest: "{{ home_path }}/{{ mux_config_file }}"
+      src: files/tmuxinator.conf 
+      remote_src: yes 
+      force: yes
+
+  - name: Ensure configuration in zshrc
+    lineinfile: dest={{ zshrc_file }} line={{ item }}
+    with_items:
+      - plugins+=(tmux tmuxinator)
+      - source ~/{{ mux_config_file }}
+
+  - name: Ensure tmuxinator configs directory
+    file: path={{ mux_configs_path }} state=directory
+
+  - name: Ensure tmuxinator configs
+    copy:
+      dest: "{{ mux_configs_path }}/{{ item }}"
+      src: files/tmuxinator/{{ item }}
+      remote_src: yes
+      force: yes
+    with_items:
+      - conf.yml
+      - yayadb.yml
+
+  vars:
+    mux_config_file: .tmuxinator.conf
+    mux_configs_path: "{{ home_path }}/.config/tmuxinator"

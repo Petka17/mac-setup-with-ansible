@@ -1,0 +1,11 @@
+# ~/.tmuxinator/conf.yml
+
+name: conf
+root: ~/
+
+windows:
+  - zshrc: vim ~/.zshrc
+  - vimrc: vim ~/.vimrc
+  - tmux: vim ~/.tmux.conf
+  - git: vim ~/.gitconfig
+  - ssh: vim ~/.ssh/config
