@@ -16,7 +16,7 @@
 
     # QuickLook
     - import_tasks: tasks/quick_look.yml
-      tags: [qlook]
+      tags: ['qlook']
 
     # Ensure keys
     - import_tasks: tasks/ids.yml
@@ -38,10 +38,9 @@
     - import_tasks: tasks/tmux.yml
       tags: ['tmux']
 
-    # pyenv 
-
-    # ffmpeg
-    # numpy
+    # pyenv
+    - import_tasks: tasks/pyenv.yml
+      tags: ['pyenv']
 
     # nvm
 
@@ -55,6 +54,9 @@
     # jevn + java + maven
 
     # Unarchiver
+
+    # ffmpeg
+    # numpy
 
     # httpie
     # Postman

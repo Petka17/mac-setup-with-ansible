@@ -1,0 +1,13 @@
+---
+- name: Ensure Latest pyenv
+  homebrew: name=pyenv state=latest
+
+- name: Ensure pyenv-virtualenv
+  homebrew: name=pyenv-virtualenv state=latest
+
+- name: Ensure py-init
+  lineinfile: path="{{ zshrc_file }}" line="{{ item }}"
+  with_items:
+    - eval "$(pyenv init -)"
+    - eval "$(pyenv virtualenv-init -)"
+    - export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
