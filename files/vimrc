@@ -3,9 +3,9 @@ set nocompatible
 filetype plugin indent on  " Load plugins according to detected file
 syntax on                  " Enable syntax highlighting.
 
-set nobackup               "no backup files
-set nowritebackup          "only in case you don't want a backup file while editing
-set noswapfile             "no swap files
+set nobackup               " no backup files
+set nowritebackup          " only in case you don't want a backup file while editing
+set noswapfile             " no swap files
 
 set clipboard=unnamed      " System clipboard
 set autoindent             " Indent according to previous line.
@@ -60,16 +60,14 @@ augroup BWCCreateDir
 augroup END
 
 if empty(glob('~/.vim/colors/solarized.vim'))
-  silent !curl -fLo "~/.vim/colors/solarized.vim" --create-dirs \
-  https://raw.githubusercontent.com/altercation/vim-colors-solarized/master/colors/solarized.vim
+  silent !curl -fLo ~/.vim/colors/solarized.vim --create-dirs https://raw.githubusercontent.com/altercation/vim-colors-solarized/master/colors/solarized.vim
 endif
 
 set background=dark
 colorscheme solarized
 
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -125,13 +123,13 @@ let g:prettier#config#trailing_comma = 'none'
 let g:prettier#config#parser = 'babylon'
 let g:prettier#config#prose_wrap = 'preserve'
 
-let g:NERDSpaceDelims = 1 " Add spaces after comment delimiters by default
-let g:NERDCompactSexyComs = 1 " Use compact syntax for prettified multi-line comments
-let g:NERDDefaultAlign = 'left' " Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDAltDelims_java = 1 " Set a language to use its alternate delimiters by default
+let g:NERDSpaceDelims = 1             " Add spaces after comment delimiters by default
+let g:NERDCompactSexyComs = 1         " Use compact syntax for prettified multi-line comments
+let g:NERDDefaultAlign = 'left'       " Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDAltDelims_java = 1          " Set a language to use its alternate delimiters by default
 let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } } " Add your own custom formats or override the defaults
-let g:NERDCommentEmptyLines = 1 " Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
+let g:NERDCommentEmptyLines = 1       " Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDTrimTrailingWhitespace = 1  " Enable trimming of trailing whitespace when uncommenting
 
 let g:elm_format_autosave = 1
 let g:elm_format_fail_silently = 0

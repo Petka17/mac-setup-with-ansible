@@ -1,7 +1,10 @@
 ---
 - block:
-  - name: Install Latest Vim
+  - name: Ensure Latest Vim
     homebrew: name=vim state=latest
+
+  - name: Ensure cmake (for YouCompeteMe plugin)
+    homebrew: name=cmake state=latest
 
   - name: Ensure vimrc
     copy:
@@ -9,11 +12,9 @@
       src: files/vimrc
       remote_src: yes
       force: yes
-
-  # TODO: install plugins  
         
 - name: Ensure Latest Sublime
-  homebrew_cask: name=sublime state=latest
+  homebrew_cask: name=sublime-text state=latest
 
 - name: Ensure Latest Atom
   homebrew_cask: name=atom state=latest
