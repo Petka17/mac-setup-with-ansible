@@ -18,3 +18,25 @@ In order to do that run `prepare.sh`
 # Run Playbook
 You need to run
 `ansible-playbook mail.yml`
+
+# secrets.yml format
+```
+---
+keys:
+  private:
+    path: ~/.ssh/id_rsa
+    content: |
+      -----BEGIN RSA PRIVATE KEY-----
+      your private key
+      -----END RSA PRIVATE KEY-----
+  public:
+    path: ~/.ssh/id_rsa.pub
+    content: <your_public_key>
+git:
+  name: <name_for_commit>
+  email: <email_for_commit>
+  signingkey: <signingkey>
+  github:
+    user: <your_github_account>
+    token: <your_github_token>
+```

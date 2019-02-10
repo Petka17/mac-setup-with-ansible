@@ -1,5 +1,11 @@
 ---
-- name: Install Latest Vim
+- name: Load secret info
+  include_vars: file=group_vars/secrets.yml
+  no_log: yes
+
+- name: Ensure Latest Git
   homebrew: name=git state=latest
 
-# TODO: ass gitconfig
+- name: Ensure gitconfig
+  template: dest={{ home_path }}/.gitconfig src=files/gitconfig.j2
+  no_log: yes
