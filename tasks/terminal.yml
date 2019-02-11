@@ -11,7 +11,7 @@
       homebrew_cask: name=font-droidsansmono-nerd-font-mono state=latest
 
     # TODO: Setup iTerm2 profile
-    tags: ['iterm']
+    tags: [iterm]
 
   - block:
     - name: Ensure zsh
@@ -67,7 +67,7 @@
     vars:
       custom_alias_path: "{{ home_path }}/.aliases/custom"
     
-    tags: ['zsh']
+    tags: [zsh]
           
   - block:
     - name: Ensure oh-my-zsh
@@ -116,4 +116,4 @@
     vars:
       oh_my_zsh_home: "{{ home_path }}/.oh-my-zsh"
 
-    tags: ['ohmyzsh']
+    tags: [ohmyzsh]

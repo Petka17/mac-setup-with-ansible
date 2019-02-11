@@ -12,39 +12,39 @@
 
     # Mac Preferences:  Bluetooth, Color
     - import_tasks: tasks/mac_pref.yml
-      tags: ['prefs']
+      tags: [prefs]
 
     # QuickLook
     - import_tasks: tasks/quick_look.yml
-      tags: ['qlook']
+      tags: [qlook]
 
     # Ensure keys
     - import_tasks: tasks/ids.yml
-      tags: ['ids']
+      tags: [ids]
 
     # Ensure Git + Git Config
     - import_tasks: tasks/vsc.yml
-      tags: ['vsc']
+      tags: [vsc]
 
     # Vim
     - import_tasks: tasks/editors.yml
-      tags: ['editors']
+      tags: [editors]
 
     # iterm + zsh + oh-my-zsh + zsh-highlight + zsh-complete + zsh config
     - import_tasks: tasks/terminal.yml
-      tags: ['terminal']
+      tags: [terminal]
 
     # tmux + tmuxinator (or tmuxp)
     - import_tasks: tasks/tmux.yml
-      tags: ['tmux']
+      tags: [tmux]
 
     # pyenv
     - import_tasks: tasks/pyenv.yml
-      tags: ['pyenv']
+      tags: [pyenv]
 
     # nvm and yarn
     - import_tasks: tasks/nvm.yml
-      tags: ['nvm']
+      tags: [nvm]
 
     # elm elm-format elm-analyze elm-reactor create-elm-app
 
@@ -64,12 +64,12 @@
     # Spectacle
     - name: Ensure Lates Spectacle 
       homebrew_cask: name=spectacle state=latest
-      tags: ['utils']
+      tags: [utils]
 
     # Tunnelblick (import config, start connection)
     - name: Ensure Lastest Tunnelblick
       homebrew_cask: name=tunnelblick state=latest
-      tags: ['utils']
+      tags: [utils]
 
     # Chrome + Extentions
 
@@ -85,7 +85,7 @@
 
     # Docker
     - import_tasks: tasks/docker.yml
-      tags: ['docker']
+      tags: [docker]
 
     # VirtualBox + virtualbox extention pack
 
@@ -94,7 +94,7 @@
     # 1Password
     - name: Install 1Password App
       homebrew_cask: name=1password state=latest
-      tags: ['1pass']
+      tags: [1pass]
 
     # Dropbox
     # Google Drive (?)
