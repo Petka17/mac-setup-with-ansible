@@ -65,17 +65,13 @@
     - import_tasks: tasks/mac_apps.yml
       tags: [mac_apps]
 
-    # Chrome + Extentions
+    # Chrome + Extentions, Firefox, Opera, Tor
+    - import_tasks: tasks/browsers.yml
+      tags: ['browsers']
 
-    # Firefox, opera, tor, sphere (?)
-
-    # VSCode + plugins + settings + keyboard
-    # Xcode
-    # Android Studio (+avd, Android File Transfer)
-    # Idea CE
-    
-    # DataGrip
-    # Mongo Compass
+    # VSCode, Xcode, Android Studio, DataGrip, Mongo Compass
+    - import_tasks: tasks/ide.yml
+      tags: [ide]
 
     # Docker
     - import_tasks: tasks/docker.yml

@@ -1,0 +1,26 @@
+---
+- block:
+  - name: Ensure Latest VSCode 
+    homebrew_cask: name=visual-studio-code state=latest
+  
+  # TODO: install plugins
+
+  # TODO: settings + keyboard
+
+- block:
+  - name: Ensure Latest Android Studio
+    homebrew_cask: name=android-studio state=latest
+
+  - name: Ensure Latest Android File Transfer
+    homebrew_cask: name=android-file-transfer state=latest
+
+  - name: Ensure Latest Android File Transfer
+    homebrew_cask: name=android-sdk state=latest
+
+# TODO: Xcode
+    
+- name: Ensure Latest DataGrip 
+  homebrew_cask: name=datagrip state=latest
+
+- name: Ensure Latest Mongo Compas
+  homebrew_cask: name=mongodb-compass state=latest
