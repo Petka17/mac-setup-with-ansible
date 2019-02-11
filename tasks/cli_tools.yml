@@ -1,0 +1,6 @@
+---
+- name: Ensure latest httpie
+  homebrew: name=httpie state=latest
+
+- name: Ensure latest ffmpeg
+  homebrew: name=ffmpeg state=latest

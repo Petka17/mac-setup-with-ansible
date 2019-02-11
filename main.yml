@@ -10,8 +10,6 @@
     curr_user_group: "{{ ansible_facts.user_gid }}"
 
   tasks:
-    # Install mac security updates
-
     # Mac Preferences:  Bluetooth, Color
     - import_tasks: tasks/mac_pref.yml
       tags: [prefs]
@@ -56,26 +54,16 @@
     - import_tasks: tasks/dart.yml
       tags: [dart]
 
-    # rbenv (?)
-    # jevn + java + maven
+    # TODO: rbenv (?)
+    # TODO: jevn + java + maven
 
-    # Unarchiver
+    # Some useful cli tools
+    - import_tasks: tasks/cli_tools.yml
+      tags: [cli_tools]
 
-    # ffmpeg
-    # numpy
-
-    # httpie
-    # Postman
-
-    # Spectacle
-    - name: Ensure Lates Spectacle 
-      homebrew_cask: name=spectacle state=latest
-      tags: [utils]
-
-    # Tunnelblick (import config, start connection)
-    - name: Ensure Lastest Tunnelblick
-      homebrew_cask: name=tunnelblick state=latest
-      tags: [utils]
+    # Some useful mac tools
+    - import_tasks: tasks/mac_apps.yml
+      tags: [mac_apps]
 
     # Chrome + Extentions
 
@@ -86,24 +74,14 @@
     # Android Studio (+avd, Android File Transfer)
     # Idea CE
     
-    # Datagrip
+    # DataGrip
     # Mongo Compass
 
     # Docker
     - import_tasks: tasks/docker.yml
       tags: [docker]
 
-    # VirtualBox + virtualbox extention pack
-
-    # Vargant
-
-    # 1Password
-    - name: Install 1Password App
-      homebrew_cask: name=1password state=latest
-      tags: [1pass]
-
-    # Dropbox
-    # Google Drive (?)
+    # VirtualBox + virtualbox extention pack + Vargant
 
     # Franz
     # Telegram
@@ -121,9 +99,6 @@
     # Icon Set Creator
 
     # Microsoft Office
-
-    # CleanMyMac
-    # Parallels Tools
 
     # Grammarly
     # Torrent

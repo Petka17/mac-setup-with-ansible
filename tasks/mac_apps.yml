@@ -1,0 +1,27 @@
+---
+- name: Install Latest 1Password App
+  homebrew_cask: name=1password state=latest
+  
+- name: Ensure Latest Unarchiver 
+  homebrew_cask: name=the-unarchiver state=latest
+
+- name: Ensure Latest Spectacle 
+  homebrew_cask: name=spectacle state=latest
+
+- name: Ensure Latest Tunnelblick
+  homebrew_cask: name=tunnelblick state=latest
+
+- name: Ensure Latest Postman
+  homebrew_cask: name=postman state=latest
+
+- name: Ensure Latest CleanMyMac3
+  homebrew_cask: name=cleanmymac3 state=latest
+
+- name: Ensure Latest Parallels Toolbox
+  homebrew_cask: name=parallels-toolbox state=latest
+
+- name: Ensure Latest Dropbox
+  homebrew_cask: name=dropbox state=latest
+
+- name: Ensure Latest Google Backup and Sync
+  homebrew_cask: name=google-backup-and-sync state=latest
