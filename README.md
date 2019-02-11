@@ -32,6 +32,8 @@ keys:
   public:
     path: ~/.ssh/id_rsa.pub
     content: <your_public_key>
+ssh_config: |
+  <your_ssh_config>
 git:
   name: <name_for_commit>
   email: <email_for_commit>
