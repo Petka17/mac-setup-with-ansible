@@ -1,0 +1,45 @@
+---
+- block:
+  - name: Ensure dart tap
+    homebrew_tap: name=dart-lang/dart state=present
+
+  - name: Esure Latest dart
+    homebrew: name=dart state=latest
+
+- block:
+  - name: Check flutter bin
+    stat: path=/usr/local/flutter/bin/flutter
+    register: flutter_bin_results
+
+  - name: Ensure stable flutter
+    unarchive: 
+      src: https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.0.0-stable.zip
+      remote_src: yes
+      dest: /usr/local/
+      owner: "{{ curr_user }}"
+      group: "{{ curr_user_group }}"
+    become: yes
+    when: flutter_bin_results.stat.exists == False
+
+  - name: Ensure symlink to flutter
+    file:
+      path: /usr/local/bin/flutter
+      src: /usr/local/flutter/bin/flutter
+      state: link
+  
+  - name: Ensure usbmuxd
+    homebrew: name=usbmuxd state=head
+
+  - name: Ensure usbmuxd link
+    homebrew: name=usbmuxd state=linked
+  
+  - name: Ensure libimobiledevice
+    homebrew: name=libimobiledevice state=head
+
+  - name: Ensure ideviceinstaller ios-deploy cocoapods
+    homebrew: 
+      name: [ideviceinstaller, ios-deploy, cocoapods]
+      state: latest
+
+  # - name: Ensure pod setup
+  #   command: pod setup

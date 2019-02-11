@@ -6,6 +6,8 @@
   vars:
     home_path: "{{ lookup('env', 'HOME') }}"
     zshrc_file: "{{ home_path }}/.zshrc"
+    curr_user: "{{ ansible_facts.user_id }}"
+    curr_user_group: "{{ ansible_facts.user_gid }}"
 
   tasks:
     # Install mac security updates
@@ -51,6 +53,8 @@
       tags: [elm]
 
     # dart + flutter 
+    - import_tasks: tasks/dart.yml
+      tags: [dart]
 
     # rbenv (?)
     # jevn + java + maven
