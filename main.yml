@@ -46,7 +46,9 @@
     - import_tasks: tasks/nvm.yml
       tags: [nvm]
 
-    # elm elm-format elm-analyze elm-reactor create-elm-app
+    # elm elm-format
+    - import_tasks: tasks/elm.yml
+      tags: [elm]
 
     # dart + flutter 
 

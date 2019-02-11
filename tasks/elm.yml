@@ -1,0 +1,6 @@
+---
+- name: Ensure Latest elm
+  homebrew: name=elm state=latest
+
+- name: Ensure Lates elm-format
+  homebrew: name=elm-format state=latest
