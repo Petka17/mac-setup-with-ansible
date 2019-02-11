@@ -43,6 +43,8 @@
       tags: ['pyenv']
 
     # nvm
+    - import_tasks: tasks/nvm.yml
+      tags: ['nvm']
 
     # yarn
 

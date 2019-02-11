@@ -1,0 +1,12 @@
+---
+- name: Check nvm install
+  command: command -v nvm
+  ignore_errors: yes
+  register: nvm_result
+
+- name: Ensure nvm
+  shell: >
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  when: nvm_result.rc != 0
