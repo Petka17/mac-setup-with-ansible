@@ -42,11 +42,9 @@
     - import_tasks: tasks/pyenv.yml
       tags: ['pyenv']
 
-    # nvm
+    # nvm and yarn
     - import_tasks: tasks/nvm.yml
       tags: ['nvm']
-
-    # yarn
 
     # elm elm-format elm-analyze elm-reactor create-elm-app
 

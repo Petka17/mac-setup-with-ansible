@@ -10,3 +10,9 @@
   args:
     creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
   when: nvm_result.rc != 0
+
+- name: Ensure latest yarn
+  homebrew:
+    name: yarn
+    state: latest
+    install_options: ignore-dependencies
