@@ -42,3 +42,11 @@ git:
     user: <your_github_account>
     token: <your_github_token>
 ```
+
+# Test with vagrant
+Install Virtualbox, vagrant and vagrant disksize plugin
+```
+brew cask install virtualbox 
+brew install vagrant
+vagrant plugin install vagrant-disksize
+```
