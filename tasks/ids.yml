@@ -18,5 +18,5 @@
 
 - name: Ensure ssh config
   copy:
-    dest: "{{ home_path }}/.ssh/config"
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
     content: "{{ ssh_config }}"

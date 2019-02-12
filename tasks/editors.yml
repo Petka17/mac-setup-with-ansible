@@ -8,7 +8,7 @@
 
   - name: Ensure vimrc
     copy:
-      dest: "{{ home_path }}/.vimrc"
+      dest: "{{ ansible_env.HOME }}/.vimrc"
       src: files/vimrc
       remote_src: yes
       force: yes
@@ -16,7 +16,7 @@
   - name: Ensure vim plugins install
     shell: |
       vim -E -s -c "source ~/.vimrc" -c PlugInstall -c qa
-      cd {{ home_path }}/.vim/plugged/YouCompleteMe
+      cd {{ ansible_env.HOME }}/.vim/plugged/YouCompleteMe
       ./install.py
         
 - name: Ensure Latest Sublime and Atom

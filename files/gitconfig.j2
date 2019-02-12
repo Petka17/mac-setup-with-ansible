@@ -4,7 +4,7 @@
   signingkey = {{ git.signingkey }}
 [core]
   editor = vim
-  excludesfile = {{ home_path }}/.gitignore_global
+  excludesfile = {{ ansible_env.HOME }}/.gitignore_global
   autocrlf = input
 [push]
   default = matching

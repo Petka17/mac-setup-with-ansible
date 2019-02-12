@@ -1,4 +1,5 @@
 ---
+# TODO: Add more mac settings like scroll direction
 
 - block:
   - block:
@@ -51,7 +52,7 @@
 - block:
   - block:
     - name: "Date Time - Set the timezone"
-      command: "systemsetup -settimezone 'Europe/Moscow'"
+      command: "systemsetup -settimezone '{{ timezone }}'"
 
     - name: "Date Time - Set date and time automatically"
       command: "systemsetup -setusingnetworktime 'on'"

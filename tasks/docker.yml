@@ -16,4 +16,4 @@
       line: source {{ docker_alias_path }}
 
   vars:
-    docker_alias_path: "{{ home_path }}/.aliases/docker" 
+    docker_alias_path: "{{ ansible_env.HOME }}/.aliases/docker" 

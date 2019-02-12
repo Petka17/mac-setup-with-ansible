@@ -47,10 +47,10 @@
       lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
       with_items:
         - { regexp: '^export EDITOR', line: 'export EDITOR="vim"' }
-        - { regexp: '^export SSH_KEY_PATH', line: 'export SSH_KEY_PATH="{{ home_path }}/.ssh/rsa_id"' }
+        - { regexp: '^export SSH_KEY_PATH', line: 'export SSH_KEY_PATH="{{ ansible_env.HOME }}/.ssh/rsa_id"' }
     
     - name: Ensure alias folder
-      file: path={{ home_path }}/.aliases state=directory
+      file: path={{ ansible_env.HOME }}/.aliases state=directory
 
     - name: Ensure alias file
       copy:
@@ -65,7 +65,7 @@
           line: source {{ custom_alias_path }}
 
     vars:
-      custom_alias_path: "{{ home_path }}/.aliases/custom"
+      custom_alias_path: "{{ ansible_env.HOME }}/.aliases/custom"
     
     tags: [zsh]
           
@@ -92,6 +92,7 @@
       with_items:
         - { regexp: '^ZSH_THEME', line: 'ZSH_THEME="powerlevel9k/powerlevel9k"' }
         - { regexp: '^POWERLEVEL9K_MODE', line: 'POWERLEVEL9K_MODE="nerdfont-complete"' }
+        # TODO: Enhance powerlevel theme
 
     - name: Ensure plugins
       git: 
@@ -114,6 +115,6 @@
       lineinfile: dest={{ zshrc_file }} line="source $ZSH/oh-my-zsh.sh"
   
     vars:
-      oh_my_zsh_home: "{{ home_path }}/.oh-my-zsh"
+      oh_my_zsh_home: "{{ ansible_env.HOME }}/.oh-my-zsh"
 
     tags: [ohmyzsh]

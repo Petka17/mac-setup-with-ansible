@@ -7,5 +7,5 @@
   homebrew: name=git state=latest
 
 - name: Ensure gitconfig
-  template: dest={{ home_path }}/.gitconfig src=files/gitconfig.j2
+  template: dest={{ ansible_env.HOME }}/.gitconfig src=files/gitconfig.j2
   no_log: yes

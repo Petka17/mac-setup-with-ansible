@@ -14,13 +14,13 @@
 
   - name: Ensure tmux config
     copy:
-      dest: "{{ home_path }}/.tmux.conf"
+      dest: "{{ ansible_env.HOME }}/.tmux.conf"
       src: files/tmux.conf
       remote_src: yes
       force: yes
 
   vars:
-    tmux_plugin_path: "{{ home_path }}/.tmux/plugins/tpm/"
+    tmux_plugin_path: "{{ ansible_env.HOME }}/.tmux/plugins/tpm/"
 
 - block:
   - name: Ensure Latest tmuxinator
@@ -29,7 +29,7 @@
 
   - name: Ensure tmuxinator config file
     copy: 
-      dest: "{{ home_path }}/{{ mux_config_file }}"
+      dest: "{{ ansible_env.HOME }}/{{ mux_config_file }}"
       src: files/tmuxinator.conf 
       remote_src: yes 
       force: yes
@@ -55,4 +55,4 @@
 
   vars:
     mux_config_file: .tmuxinator.conf
-    mux_configs_path: "{{ home_path }}/.config/tmuxinator"
+    mux_configs_path: "{{ ansible_env.HOME }}/.config/tmuxinator"
