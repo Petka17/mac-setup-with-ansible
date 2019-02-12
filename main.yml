@@ -54,8 +54,13 @@
     - import_tasks: tasks/dart.yml
       tags: [dart]
 
-    # TODO: rbenv (?)
-    # TODO: jevn + java + maven
+    # rbenv
+    - import_tasks: tasks/rbenv.yml
+      tags: [rbenv]
+
+    # java + jevn + maven
+    - import_tasks: tasks/java.yml
+      tags: [java]
 
     # Some useful cli tools
     - import_tasks: tasks/cli_tools.yml
@@ -78,26 +83,5 @@
       tags: [docker]
 
     # VirtualBox + virtualbox extention pack + Vargant
-
-    # Franz
-    # Telegram
-    # Skype
-
-    # Trello
-    # RealTimeBoard
-    # VLC
-
-    # Microsoft Remote Desktop
-    # Team Viewer
-
-    # Figma
-    # Boxy SVG
-    # Icon Set Creator
-
-    # Microsoft Office
-
-    # Grammarly
-    # Torrent
-
-    # WebMoney Keeper
-    # Electrum
+    - import_tasks: tasks/virtualbox.yml
+      tags: [virtualbox]

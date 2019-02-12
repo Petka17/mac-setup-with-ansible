@@ -1,0 +1,11 @@
+---
+- name: Ensure virtualbox
+  homebrew_cask: 
+    name: [virtualbox, virtualbox-extension-pack]
+    state: latest
+
+- name: Ensure vagrant
+  homebrew: name=vagrant state=latest
+
+- name: Ensire vagrant disksize plugin
+  command: vagrant plugin install vagrant-disksize

@@ -1,0 +1,9 @@
+---
+- name: Ensure latest rbenv
+  homebrew: name=rbenv state=latest
+
+- name: Ensure latest ruby-build
+  homebrew: name=ruby-build state=latest
+
+- name: Ensure rbenv init
+  command: rbenv init
