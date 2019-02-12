@@ -12,9 +12,9 @@
         - android-studio 
         - android-file-transfer
         - android-sdk
-    state: latest
+      state: latest
 
-# TODO: Xcode
+# Install Xcode manually
     
 - name: Ensure Latest DB IDE
   homebrew_cask: 
