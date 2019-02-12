@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "yzgyyang/macOS-10.14"
   config.vm.box_version = "10.14.2"
 
-  config.disksize.size = '50GB'
+  config.disksize.size = '80GB'
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
