@@ -65,8 +65,8 @@
       tags: [cli_tools]
 
     # Some useful mac tools
-    - import_tasks: tasks/mac_apps.yml
-      tags: [mac_apps]
+    - import_tasks: tasks/essential_apps.yml
+      tags: [essential_apps]
 
     # Chrome + Extentions, Firefox, Opera, Tor
     - import_tasks: tasks/browsers.yml
@@ -83,3 +83,7 @@
     # VirtualBox + virtualbox extention pack + Vargant
     - import_tasks: tasks/virtualbox.yml
       tags: [virtualbox]
+
+    # Other mac apps
+    - import_tasks: tasks/mac_apps.yml
+      tags: [mac_apps]
