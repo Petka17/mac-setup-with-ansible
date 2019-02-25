@@ -1,0 +1,5 @@
+files/* linguist-detectable=false
+prepare.sh linguist-detectable=false
+Vagrantfile linguist-detectable=false
+ *.yml linguist-language=Ansible
+ 
