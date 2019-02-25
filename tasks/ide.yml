@@ -3,81 +3,81 @@
   - name: Ensure Latest VSCode 
     homebrew_cask: name=visual-studio-code state=latest
   
-  - name: Ensure latest vscode extentions
-    command: code --install-extention {{ item }}
-    with_items:
-      # Looking
-      - gerane.theme-solarized-dark
-      - pkief.material-icon-theme
-      # Convenience
-      - formulahendry.auto-close-tag
-      - formulahendry.auto-rename-tag
-      - aaron-bond.better-comments
-      - oderwat.indent-rainbow
-      - streetsidesoftware.code-spell-checker
-      - streetsidesoftware.code-spell-checker-russian
-      # VCS
-      - hirse.vscode-ungit
-      - donjayamanne.githistory
-      - gitlenseamodio.gitlens
-      - codezombiech.gitignore
-      - piotrpalarz.vscode-gitignore-generator
-      - sidneys1.gitconfig
-      - pstreule.codebucket
-      # Javacsript + TS
-      - esbenp.prettier-vscode
-      - mgmcdermott.vscode-language-babel
-      - ms-vscode.vscode-typescript-tslint-plugin
-      - dbaeumer.vscode-eslint
-      - wix.vscode-import-cost
-      - jpoissonnier.vscode-styled-components
-      # Python
-      - ms-python.python
-      - etmoffat.pip-packages
-      # Ansible
-      - vscoss.vscode-ansible
-      - dhoeric.ansible-vault
-      - rupisaini.vscode-ansible-linter
-      # Dart + Flutter
-      - dart-code.dart-code
-      - dart-code.flutter
-      - nash.awesome-flutter-snippets
-      # Elm
-      - sbrink.elm
-      - rubymaniac.vscode-html-to-elm
-      # Ruby
-      - rebornix.ruby
-      # Bash
-      - shakram02.bash-beautify
-      - rogalmic.bash-debug
-      # Highlighting for different filetypes
-      - samuelcolvin.jinjahtml
-      - bungcip.better-toml
-      - mrmlnc.vscode-json5
-      - zhouronghui.propertylist
-      - bbenoist.vagrant
-      - marlon407.code-groovy
-      - jmmeessen.jenkins-declarative-support
-      - vscodevim.vim
-      - fallenwood.viml
-      - elken.mux
-      - mikestead.dotenv
-      - yzhang.markdown-all-in-one
-      - henoc.svgeditor
-      # CSV + Excel
-      - grapecity.gc-excelviewer
-      - mechatroner.rainbow-csv
-      # External Integrations: Docker, DBs, SSH, REST
-      - peterjausovec.vscode-docker
-      - formulahendry.vscode-mysql
-      - bajdzis.vscode-database
-      - ms-azuretools.vscode-cosmosdb
-      - chrmarti.ssh
-      - humao.rest-client
-      # Pair programming
-      - ms-vsliveshare.vsliveshare
-      # Preserve settings
-      - shan.code-settings-sync
+  # - name: Ensure latest vscode extentions
+  #   command: code --install-extention {{ item }}
+  #   with_items:
+  #     # Looking
+  #     - gerane.theme-solarized-dark
+  #     - pkief.material-icon-theme
+  #     # Convenience
+  #     - formulahendry.auto-close-tag
+  #     - formulahendry.auto-rename-tag
+  #     - aaron-bond.better-comments
+  #     - oderwat.indent-rainbow
+  #     - streetsidesoftware.code-spell-checker
+  #     - streetsidesoftware.code-spell-checker-russian
+  #     # VCS
+  #     - hirse.vscode-ungit
+  #     - donjayamanne.githistory
+  #     - gitlenseamodio.gitlens
+  #     - codezombiech.gitignore
+  #     - piotrpalarz.vscode-gitignore-generator
+  #     - sidneys1.gitconfig
+  #     - pstreule.codebucket
+  #     # Javacsript + TS
+  #     - esbenp.prettier-vscode
+  #     - mgmcdermott.vscode-language-babel
+  #     - ms-vscode.vscode-typescript-tslint-plugin
+  #     - dbaeumer.vscode-eslint
+  #     - wix.vscode-import-cost
+  #     - jpoissonnier.vscode-styled-components
+  #     # Python
+  #     - ms-python.python
+  #     - etmoffat.pip-packages
+  #     # Ansible
+  #     - vscoss.vscode-ansible
+  #     - dhoeric.ansible-vault
+  #     - rupisaini.vscode-ansible-linter
+  #     # Dart + Flutter
+  #     - dart-code.dart-code
+  #     - dart-code.flutter
+  #     - nash.awesome-flutter-snippets
+  #     # Elm
+  #     - sbrink.elm
+  #     - rubymaniac.vscode-html-to-elm
+  #     # Ruby
+  #     - rebornix.ruby
+  #     # Bash
+  #     - shakram02.bash-beautify
+  #     - rogalmic.bash-debug
+  #     # Highlighting for different filetypes
+  #     - samuelcolvin.jinjahtml
+  #     - bungcip.better-toml
+  #     - mrmlnc.vscode-json5
+  #     - zhouronghui.propertylist
+  #     - bbenoist.vagrant
+  #     - marlon407.code-groovy
+  #     - jmmeessen.jenkins-declarative-support
+  #     - vscodevim.vim
+  #     - fallenwood.viml
+  #     - elken.mux
+  #     - mikestead.dotenv
+  #     - yzhang.markdown-all-in-one
+  #     - henoc.svgeditor
+  #     # CSV + Excel
+  #     - grapecity.gc-excelviewer
+  #     - mechatroner.rainbow-csv
+  #     # External Integrations: Docker, DBs, SSH, REST
+  #     - peterjausovec.vscode-docker
+  #     - formulahendry.vscode-mysql
+  #     - bajdzis.vscode-database
+  #     - ms-azuretools.vscode-cosmosdb
+  #     - chrmarti.ssh
+  #     - humao.rest-client
+  #     # Pair programming
+  #     - ms-vsliveshare.vsliveshare
+  #     # Preserve settings
+  #     - shan.code-settings-sync
 
 
   # TODO: settings + keyboard

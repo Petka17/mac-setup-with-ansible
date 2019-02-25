@@ -5,7 +5,7 @@
     state: latest
 
 - name: Ensure vagrant
-  homebrew: name=vagrant state=latest
+  homebrew_cask: name=vagrant state=latest
 
 - name: Ensire vagrant disksize plugin
   command: vagrant plugin install vagrant-disksize

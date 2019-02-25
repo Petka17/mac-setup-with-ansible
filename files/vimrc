@@ -1,5 +1,7 @@
 set nocompatible
 
+set encoding=utf-8
+
 filetype plugin indent on  " Load plugins according to detected file
 syntax on                  " Enable syntax highlighting.
 

@@ -1,11 +1,8 @@
 ---
-- name: Ensure Latest Chrome 
-  homebrew_cask: name=google-chrome state=latest
-  # TODO: Install extentions: ReactDevTools, ReduxDevTools, 1Password, Vimium, Just Read Dark Reader, Stream Video Downloader
-
 - name: Ensure browsers
   homebrew_cask:
     name:
+      - google-chrome
       - firefox
       - opera
       - tor-browser
