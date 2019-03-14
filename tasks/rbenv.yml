@@ -6,6 +6,6 @@
   homebrew: name=ruby-build state=latest
 
 - name: Ensure rbenv init
-  lineinfile: 
-    path: "{{ zshrc_file }}" 
+  lineinfile:
+    path: "{{ zshrc_file }}"
     line: eval "$(rbenv init -)"

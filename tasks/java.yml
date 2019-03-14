@@ -1,36 +1,36 @@
 ---
 - block:
-  - name: Ensure caskroom/versions tap
-    homebrew_tap: name=caskroom/versions state=present
+    - name: Ensure caskroom/versions tap
+      homebrew_tap: name=caskroom/versions state=present
 
-  - name: Ensure java 8 and latest
-    homebrew_cask:
-      name: [java8, java]
-      state: latest
+    - name: Ensure java 8 and latest
+      homebrew_cask:
+        name: [java8, java]
+        state: latest
 
 - block:
-  - name: Ensure latest jevn
-    homebrew: name=jenv state=latest
+    - name: Ensure latest jevn
+      homebrew: name=jenv state=latest
 
-  - name: Ensure jenv init
-    lineinfile: 
-      path: "{{ zshrc_file }}" 
-      line: eval "$(jenv init -)"
+    - name: Ensure jenv init
+      lineinfile:
+        path: "{{ zshrc_file }}"
+        line: eval "$(jenv init -)"
 
-  - name: Ensure jenv version directory
-    file:
-      path: "{{ ansible_env.HOME }}/.jenv/versions"
-      state: directory
+    - name: Ensure jenv version directory
+      file:
+        path: "{{ ansible_env.HOME }}/.jenv/versions"
+        state: directory
 
-  - name: Get Java list
-    find:
-      paths: /Library/Java/JavaVirtualMachines/
-      file_type: directory
-    register: installed_java
+    - name: Get Java list
+      find:
+        paths: /Library/Java/JavaVirtualMachines/
+        file_type: directory
+      register: installed_java
 
-  - name: Register java in jenv
-    command: jenv add {{ item.path }}/Contents/Home
-    with_items: "{{ installed_java.files }}"
+    - name: Register java in jenv
+      command: jenv add {{ item.path }}/Contents/Home
+      with_items: "{{ installed_java.files }}"
 
 - name: Ensure latest maven
   homebrew: name=maven state=latest

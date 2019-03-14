@@ -1,10 +1,10 @@
 ---
 - name: Install Latest Mac Apps
-  homebrew_cask: 
-    name: 
+  homebrew_cask:
+    name:
       - 1password
       - spectacle
-      - dropbox
+      - yandex-disk
       - google-backup-and-sync
       - tunnelblick
     state: latest

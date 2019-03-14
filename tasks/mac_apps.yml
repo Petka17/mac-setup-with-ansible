@@ -1,20 +1,20 @@
 ---
 - name: Install Latest Mac Apps
-  homebrew_cask: 
-    name: 
+  homebrew_cask:
+    name:
       - the-unarchiver
       - postman
       - cleanmymac3
       - parallels-toolbox
       - franz
       - skype
-      # - telegram
+      # Telegram
       - trello
       - vlc
-      - remote-desktop-manager-free # Not Microsoft Remote Desktop
+      # Microsoft Remote Desktop
       - teamviewer
       - figma
-      - microsoft-office
+      # Microsoft Office
       - grammarly
       - electrum
       # RealTimeBoard

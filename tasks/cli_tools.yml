@@ -1,7 +1,8 @@
 ---
 - name: Ensure latest httpie
-  homebrew: 
-    name: 
+  homebrew:
+    name:
       - httpie
       - ffmpeg
+      - awscli
     state: latest

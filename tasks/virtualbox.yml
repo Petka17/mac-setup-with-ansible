@@ -1,6 +1,6 @@
 ---
 - name: Ensure virtualbox
-  homebrew_cask: 
+  homebrew_cask:
     name: [virtualbox, virtualbox-extension-pack]
     state: latest
 

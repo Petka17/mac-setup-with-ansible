@@ -1,6 +1,6 @@
 ---
 - name: Ensure quick look plugins
-  homebrew_cask: 
+  homebrew_cask:
     name:
       - qlcolorcode
       - qlimagesize

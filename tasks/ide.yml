@@ -1,8 +1,7 @@
 ---
 - block:
-  - name: Ensure Latest VSCode 
-    homebrew_cask: name=visual-studio-code state=latest
-  
+    - name: Ensure Latest VSCode
+      homebrew_cask: name=visual-studio-code state=latest
   # - name: Ensure latest vscode extentions
   #   command: code --install-extention {{ item }}
   #   with_items:
@@ -79,23 +78,30 @@
   #     # Preserve settings
   #     - shan.code-settings-sync
 
-
   # TODO: settings + keyboard
-
 - block:
-  - name: Ensure Latest Android Studio and utils
-    homebrew_cask: 
-      name: 
-        - android-studio 
-        - android-file-transfer
-        - android-sdk
-      state: latest
+    - name: Ensure Latest Android Studio and utils
+      homebrew_cask:
+        name:
+          - android-studio
+          - android-file-transfer
+          - android-sdk
+        state: latest
+
+    - name: Ensure base zsh params
+      lineinfile: dest={{ zshrc_file }} line={{ item }}
+      with_items:
+        - export ANDROID_HOME=$HOME/Library/Android/sdk
+        - export PATH=$PATH:$ANDROID_HOME/emulator
+        - export PATH=$PATH:$ANDROID_HOME/tools
+        - export PATH=$PATH:$ANDROID_HOME/tools/bin
+        - export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # Install Xcode manually
-    
+
 - name: Ensure Latest DB IDE
-  homebrew_cask: 
-    name: 
+  homebrew_cask:
+    name:
       - datagrip
       - mongodb-compass
     state: latest

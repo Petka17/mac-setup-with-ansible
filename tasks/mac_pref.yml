@@ -2,121 +2,268 @@
 # TODO: Add more mac settings like scroll direction
 
 - block:
-  - block:
-    - name: "AppStore - Automatically check for updates"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.SoftwareUpdate', key: 'AutomaticCheckEnabled', type: bool, value: false }
+    - block:
+        - name: "AppStore - Automatically check for updates"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.SoftwareUpdate",
+              key: "AutomaticCheckEnabled",
+              type: bool,
+              value: false,
+            }
 
-    - name: "AppStore - Download newly available updates in the background"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.SoftwareUpdate', key: 'AutomaticDownload', type: bool, value: false }
+        - name: "AppStore - Download newly available updates in the background"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.SoftwareUpdate",
+              key: "AutomaticDownload",
+              type: bool,
+              value: false,
+            }
 
-    - name: "AppStore - Install app updates"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.commerce', key: 'AutoUpdate', type: bool, value: false }
+        - name: "AppStore - Install app updates"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.commerce",
+              key: "AutoUpdate",
+              type: bool,
+              value: false,
+            }
 
-    - name: "AppStore - Install OSX updates"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.commerce', key: 'AutoUpdateRestartRequired', type: bool, value: false }
+        - name: "AppStore - Install OSX updates"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.commerce",
+              key: "AutoUpdateRestartRequired",
+              type: bool,
+              value: false,
+            }
 
-    - name: "AppStore - Install system data files"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.SoftwareUpdate', key: 'ConfigDataInstall', type: bool, value: false }
+        - name: "AppStore - Install system data files"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.SoftwareUpdate",
+              key: "ConfigDataInstall",
+              type: bool,
+              value: false,
+            }
 
-    - name: "AppStore - Install security updates"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.SoftwareUpdate', key: 'CriticalUpdateInstall', type: bool, value: false }
+        - name: "AppStore - Install security updates"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.SoftwareUpdate",
+              key: "CriticalUpdateInstall",
+              type: bool,
+              value: false,
+            }
 
-    become: true
+      become: true
 
-  - name: "AppStore - Check for software updates frequency"
-    osx_defaults: { domain: 'com.apple.SoftwareUpdate', key: 'ScheduleFrequency', type: int, value: 0 }
+    - name: "AppStore - Check for software updates frequency"
+      osx_defaults:
+        {
+          domain: "com.apple.SoftwareUpdate",
+          key: "ScheduleFrequency",
+          type: int,
+          value: 0,
+        }
 
-  - name: "AppStore - Show debug menu"
-    osx_defaults: { domain: 'com.apple.SoftwareUpdate', key: 'ShowDebugMenu', type: bool, value: false }
-  
-  - name: restart AppStore
-    command: killall "App Store"
-    ignore_errors: yes
+    - name: "AppStore - Show debug menu"
+      osx_defaults:
+        {
+          domain: "com.apple.SoftwareUpdate",
+          key: "ShowDebugMenu",
+          type: bool,
+          value: false,
+        }
+
+    - name: restart AppStore
+      command: killall "App Store"
+      ignore_errors: yes
 
 - name: "Bluetooth - Show Bluetooth in menu bar"
   command: defaults write com.apple.systemuiserver menuExtras -array-add "/System/Library/CoreServices/Menu Extras/Bluetooth.menu"
 
 - block:
-  - name: "Dashboard - Disable Dashboard"
-    osx_defaults: { domain: 'com.apple.dashboard', key: 'mcx-disabled', type: bool, value: true }
+    - name: "Dashboard - Disable Dashboard"
+      osx_defaults:
+        {
+          domain: "com.apple.dashboard",
+          key: "mcx-disabled",
+          type: bool,
+          value: true,
+        }
 
-  - name: "Dashboard - Dashboard state"
-    osx_defaults: { domain: 'com.apple.dashboard', key: 'enabled-state', type: int, value: 1 }
+    - name: "Dashboard - Dashboard state"
+      osx_defaults:
+        {
+          domain: "com.apple.dashboard",
+          key: "enabled-state",
+          type: int,
+          value: 1,
+        }
 
-  - name: "Dashboard - Don’t show Dashboard as a Space"
-    osx_defaults: { domain: 'com.apple.dock', key: 'dashboard-in-overlay', type: bool, value: true }
+    - name: "Dashboard - Don’t show Dashboard as a Space"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "dashboard-in-overlay",
+          type: bool,
+          value: true,
+        }
 
-  - name: "Dashboard - Enable Dashboard dev mode (allows keeping widgets on the desktop)"
-    osx_defaults: { domain: 'com.apple.dashboard', key: 'devmode', type: bool, value: false }
-
-- block:
-  - block:
-    - name: "Date Time - Set the timezone"
-      command: "systemsetup -settimezone '{{ timezone }}'"
-
-    - name: "Date Time - Set date and time automatically"
-      command: "systemsetup -setusingnetworktime 'on'"
-
-    - name: "Date Time - Set time server"
-      command: "systemsetup -setnetworktimeserver 'time.euro.apple.com.'"
-
-    - name: "Date Time - Set time zome automatically using current location"
-      osx_defaults: { domain: '/Library/Preferences/com.apple.timezone.auto.plist', key: 'Active', type: bool, value: true }
-
-    become: true
-
-  - name: "Date Time - Menu bar clock format"
-    osx_defaults: { domain: 'com.apple.menuextra.clock', key: 'DateFormat', type: string, value: "EEE d MMM HH:mm" }
-
-  - name: "Date Time - Flash the time separators"
-    osx_defaults: { domain: 'com.apple.menuextra.clock', key: 'FlashDateSeparators', type: bool, value: false }
-
-  - name: "Date Time - Analog menu bar clock"
-    osx_defaults: { domain: 'com.apple.menuextra.clock', key: 'IsAnalog', type: bool, value: false }
-
-- block:
-  - name: "Get the current background image"
-    homebrew_cask: name=aerial state=latest
+    - name: "Dashboard - Enable Dashboard dev mode (allows keeping widgets on the desktop)"
+      osx_defaults:
+        {
+          domain: "com.apple.dashboard",
+          key: "devmode",
+          type: bool,
+          value: false,
+        }
 
 - block:
-  - name: "Dock - Size"
-    osx_defaults: { domain: 'com.apple.dock', key: 'tilesize', type: float, value: 30 }
+    - block:
+        - name: "Date Time - Set the timezone"
+          command: "systemsetup -settimezone '{{ timezone }}'"
 
-  - name: "Dock - Magnification"
-    osx_defaults: { domain: 'com.apple.dock', key: 'magnification', type: bool, value: false }
+        - name: "Date Time - Set date and time automatically"
+          command: "systemsetup -setusingnetworktime 'on'"
 
-  - name: "Dock - Icon size of magnified Dock items"
-    osx_defaults: { domain: 'com.apple.dock', key: 'largesize', type: float, value: 128 }
+        - name: "Date Time - Set time server"
+          command: "systemsetup -setnetworktimeserver 'time.euro.apple.com.'"
 
-  - name: "Dock - Position on screen"
-    osx_defaults: { domain: 'com.apple.dock', key: 'orientation', type: string, value: "left" }
+        - name: "Date Time - Set time zome automatically using current location"
+          osx_defaults:
+            {
+              domain: "/Library/Preferences/com.apple.timezone.auto.plist",
+              key: "Active",
+              type: bool,
+              value: true,
+            }
 
-  - name: "Dock - Minimization effect"
-    osx_defaults: { domain: 'com.apple.dock', key: 'mineffect', type: string, value: "genie" }
+      become: true
 
-  - name: "Dock - Window's title title bar double-click action"
-    osx_defaults: { domain: 'com.apple.dock', key: 'AppleActionOnDoubleClick', type: string, value: "Maximize" }
+    - name: "Date Time - Menu bar clock format"
+      osx_defaults:
+        {
+          domain: "com.apple.menuextra.clock",
+          key: "DateFormat",
+          type: string,
+          value: "EEE d MMM HH:mm",
+        }
 
-  - name: "Dock - Minimize windows appliction into icon"
-    osx_defaults: { domain: 'com.apple.dock', key: 'minimize-to-application', type: boolean, value: false }
+    - name: "Date Time - Flash the time separators"
+      osx_defaults:
+        {
+          domain: "com.apple.menuextra.clock",
+          key: "FlashDateSeparators",
+          type: bool,
+          value: false,
+        }
 
-  - name: "Dock - Animate opening applications"
-    osx_defaults: { domain: 'com.apple.dock', key: 'launchanim', type: boolean, value: false }
-
-  - name: "Dock - Automatically hide and show"
-    osx_defaults: { domain: 'com.apple.dock', key: 'autohide', type: bool, value: true }
-
-  - name: "Dock - Show indicator for open applications"
-    osx_defaults: { domain: 'com.apple.dock', key: 'show-process-indicators', type: boolean, value: true }
-
-  - name: "Dock - Extra - Display translucent Dock icons for hidden applications"
-    osx_defaults: { domain: 'com.apple.dock', key: 'showhidden', type: boolean, value: false }
+    - name: "Date Time - Analog menu bar clock"
+      osx_defaults:
+        {
+          domain: "com.apple.menuextra.clock",
+          key: "IsAnalog",
+          type: bool,
+          value: false,
+        }
 
 - block:
-  - name: restart Dock
-    command: killall Dock
-    ignore_errors: yes
+    - name: "Get the current background image"
+      homebrew_cask: name=aerial state=latest
 
-  - name: restart MenuBar
-    command: killall SystemUIServer
-    ignore_errors: yes
+- block:
+    - name: "Dock - Size"
+      osx_defaults:
+        { domain: "com.apple.dock", key: "tilesize", type: float, value: 30 }
+
+    - name: "Dock - Magnification"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "magnification",
+          type: bool,
+          value: false,
+        }
+
+    - name: "Dock - Icon size of magnified Dock items"
+      osx_defaults:
+        { domain: "com.apple.dock", key: "largesize", type: float, value: 128 }
+
+    - name: "Dock - Position on screen"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "orientation",
+          type: string,
+          value: "left",
+        }
+
+    - name: "Dock - Minimization effect"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "mineffect",
+          type: string,
+          value: "genie",
+        }
+
+    - name: "Dock - Window's title title bar double-click action"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "AppleActionOnDoubleClick",
+          type: string,
+          value: "Maximize",
+        }
+
+    - name: "Dock - Minimize windows appliction into icon"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "minimize-to-application",
+          type: boolean,
+          value: false,
+        }
+
+    - name: "Dock - Animate opening applications"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "launchanim",
+          type: boolean,
+          value: false,
+        }
+
+    - name: "Dock - Automatically hide and show"
+      osx_defaults:
+        { domain: "com.apple.dock", key: "autohide", type: bool, value: true }
+
+    - name: "Dock - Show indicator for open applications"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "show-process-indicators",
+          type: boolean,
+          value: true,
+        }
+
+    - name: "Dock - Extra - Display translucent Dock icons for hidden applications"
+      osx_defaults:
+        {
+          domain: "com.apple.dock",
+          key: "showhidden",
+          type: boolean,
+          value: false,
+        }
+
+- block:
+    - name: restart Dock
+      command: killall Dock
+      ignore_errors: yes
+
+    - name: restart MenuBar
+      command: killall SystemUIServer
+      ignore_errors: yes
