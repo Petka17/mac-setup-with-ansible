@@ -13,7 +13,7 @@
 
     - name: Ensure stable flutter
       unarchive:
-        src: https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.0.0-stable.zip
+        src: https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.2.1-stable.zip
         remote_src: yes
         dest: /usr/local/
         owner: "{{ ansible_facts.user_id }}"
