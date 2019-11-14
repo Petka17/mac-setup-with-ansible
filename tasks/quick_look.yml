@@ -12,7 +12,6 @@
       - quicklook-csv
       - quicklook-json
       - qlcommonmark
-      - hetimazipql
       - inloop-qlplayground
       - jupyter-notebook-ql
       - webpquicklook
