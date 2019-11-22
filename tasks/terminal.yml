@@ -30,6 +30,65 @@
             mode: 0644
             force: no
 
+      tags: [zsh]
+
+    - block:
+        - name: Ensure oh-my-zsh
+          git:
+            repo: https://github.com/robbyrussell/oh-my-zsh.git
+            dest: "{{ oh_my_zsh_home }}"
+            update: yes
+            force: yes
+
+        - name: Ensure ZSH var export in zshrc
+          lineinfile: dest="{{ zshrc_file }}" regexp='^export ZSH' line="export ZSH={{ oh_my_zsh_home }}"
+
+        - name: Ensure powerlevel9k theme
+          git:
+            repo: https://github.com/bhilburn/powerlevel9k.git
+            dest: "{{ oh_my_zsh_home }}/custom/themes/powerlevel9k"
+            update: yes
+            force: yes
+
+        - name: Ensure zsh theme
+          lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
+          with_items:
+            - {
+                regexp: "^ZSH_THEME",
+                line: 'ZSH_THEME="powerlevel9k/powerlevel9k"',
+              }
+            - {
+                regexp: "^POWERLEVEL9K_MODE",
+                line: 'POWERLEVEL9K_MODE="nerdfont-complete"',
+              }
+            # TODO: Enhance powerlevel theme
+
+        - name: Ensure plugins
+          git:
+            repo: https://github.com/zsh-users/{{ item }}
+            dest: "{{ oh_my_zsh_home }}/custom/plugins/{{ item }}"
+            update: yes
+            force: yes
+          with_items:
+            - zsh-completions
+            - zsh-autosuggestions
+            - zsh-syntax-highlighting
+
+        - name: Ensure zsh theme
+          lineinfile:
+            dest: "{{ zshrc_file }}"
+            regexp: "^plugins"
+            line: plugins=(vi-mode git zsh-completions httpie zsh-autosuggestions zsh-syntax-highlighting)
+
+        - name: Ensure oh-my-zsh source
+          lineinfile: dest={{ zshrc_file }} line="source $ZSH/oh-my-zsh.sh"
+
+      vars:
+        oh_my_zsh_home: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
+      tags: [zsh]
+
+    - block:
         - name: Ensure base zsh params
           lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
           with_items:
@@ -92,59 +151,3 @@
         custom_alias_path: "{{ ansible_env.HOME }}/.aliases/custom"
 
       tags: [zsh]
-
-    - block:
-        - name: Ensure oh-my-zsh
-          git:
-            repo: https://github.com/robbyrussell/oh-my-zsh.git
-            dest: "{{ oh_my_zsh_home }}"
-            update: yes
-            force: yes
-
-        - name: Ensure ZSH var export in zshrc
-          lineinfile: dest="{{ zshrc_file }}" regexp='^export ZSH' line="export ZSH={{ oh_my_zsh_home }}"
-
-        - name: Ensure powerlevel9k theme
-          git:
-            repo: https://github.com/bhilburn/powerlevel9k.git
-            dest: "{{ oh_my_zsh_home }}/custom/themes/powerlevel9k"
-            update: yes
-            force: yes
-
-        - name: Ensure zsh theme
-          lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
-          with_items:
-            - {
-                regexp: "^ZSH_THEME",
-                line: 'ZSH_THEME="powerlevel9k/powerlevel9k"',
-              }
-            - {
-                regexp: "^POWERLEVEL9K_MODE",
-                line: 'POWERLEVEL9K_MODE="nerdfont-complete"',
-              }
-            # TODO: Enhance powerlevel theme
-
-        - name: Ensure plugins
-          git:
-            repo: https://github.com/zsh-users/{{ item }}
-            dest: "{{ oh_my_zsh_home }}/custom/plugins/{{ item }}"
-            update: yes
-            force: yes
-          with_items:
-            - zsh-completions
-            - zsh-autosuggestions
-            - zsh-syntax-highlighting
-
-        - name: Ensure zsh theme
-          lineinfile:
-            dest: "{{ zshrc_file }}"
-            regexp: "^plugins"
-            line: plugins=(vi-mode git zsh-completions httpie zsh-autosuggestions zsh-syntax-highlighting)
-
-        - name: Ensure oh-my-zsh source
-          lineinfile: dest={{ zshrc_file }} line="source $ZSH/oh-my-zsh.sh"
-
-      vars:
-        oh_my_zsh_home: "{{ ansible_env.HOME }}/.oh-my-zsh"
-
-      tags: [ohmyzsh]

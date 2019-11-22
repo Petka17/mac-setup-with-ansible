@@ -19,6 +19,10 @@
         remote_src: yes
         force: yes
 
+    - name: Ensure tmux plugin install
+      shell: "source {{ tmux_plugin_path }}/bin/install_plugins"
+      tags: [tmux-plugin]
+
   vars:
     tmux_plugin_path: "{{ ansible_env.HOME }}/.tmux/plugins/tpm/"
 

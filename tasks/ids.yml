@@ -4,7 +4,7 @@
     file: group_vars/secrets.yml
   no_log: True
 
-- name: Ensure ssh forlder
+- name: Ensure ssh folder
   file: dest="{{ ansible_env.HOME }}/.ssh" state=directory
 
 - name: Ensure private key
@@ -18,8 +18,3 @@
   copy:
     dest: "{{ keys.public.path }}"
     content: "{{ keys.public.content}}"
-
-- name: Ensure ssh config
-  copy:
-    dest: "{{ ansible_env.HOME }}/.ssh/config"
-    content: "{{ ssh_config }}"

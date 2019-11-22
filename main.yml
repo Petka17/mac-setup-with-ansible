@@ -32,6 +32,10 @@
     - import_tasks: tasks/terminal.yml
       tags: [terminal]
 
+    # rbenv
+    - import_tasks: tasks/rbenv.yml
+      tags: [rbenv]
+
     # tmux + tmuxinator (or tmuxp)
     - import_tasks: tasks/tmux.yml
       tags: [tmux]
@@ -52,9 +56,6 @@
     - import_tasks: tasks/dart.yml
       tags: [dart]
 
-    # rbenv
-    - import_tasks: tasks/rbenv.yml
-      tags: [rbenv]
 
     # java + jevn + maven
     - import_tasks: tasks/java.yml

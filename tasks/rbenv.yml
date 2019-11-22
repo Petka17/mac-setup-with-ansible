@@ -9,3 +9,10 @@
   lineinfile:
     path: "{{ zshrc_file }}"
     line: eval "$(rbenv init -)"
+
+- name: Ensure latest ruby version
+  shell: |
+    eval "$(rbenv init -)"
+    rbenv install 2.6.5
+    rbenv rehash
+    rbenv global 2.6.5
