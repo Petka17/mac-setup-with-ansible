@@ -8,7 +8,7 @@
 
     - name: Ensure tmux plugin manager
       git:
-        dest: "{{ tmux_plugin_path }}"
+        dest: "{{ tmux_plugin_path }}/tpm"
         repo: https://github.com/tmux-plugins/tpm
         force: yes
 
@@ -20,11 +20,18 @@
         force: yes
 
     - name: Ensure tmux plugin install
-      shell: "source {{ tmux_plugin_path }}/bin/install_plugins"
+      shell: "source {{ tmux_plugin_path }}/tpm/bin/install_plugins"
+      environment:
+        TMUX_PLUGIN_MANAGER_PATH: "{{ tmux_plugin_path }}"
       tags: [tmux-plugin]
 
+    - name: Ensure zsh params
+      lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
+      with_items:
+        - { regexp: "^TMUX_PLUGIN_MANAGER_PATH", line: 'TMUX_PLUGIN_MANAGER_PATH={{ tmux_plugin_path }}' }
+
   vars:
-    tmux_plugin_path: "{{ ansible_env.HOME }}/.tmux/plugins/tpm/"
+    tmux_plugin_path: "{{ ansible_env.HOME }}/.tmux/plugins"
 
 - block:
     - name: Ensure Latest tmuxinator
@@ -55,7 +62,6 @@
         force: yes
       with_items:
         - conf.yml
-        - yayadb.yml
 
   vars:
     mux_config_file: .tmuxinator.conf
