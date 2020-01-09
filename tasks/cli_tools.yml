@@ -1,7 +1,8 @@
 ---
-- name: Ensure latest httpie
+- name: Ensure latest cli tools
   homebrew:
     name:
+      - mas
       - httpie
       - ffmpeg
       - awscli

@@ -2,8 +2,7 @@
 - name: Ensure browsers
   homebrew_cask:
     name:
-      - google-chrome
       - firefox
-      - opera
+      - google-chrome
       - tor-browser
     state: latest
