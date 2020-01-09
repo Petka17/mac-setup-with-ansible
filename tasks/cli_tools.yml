@@ -6,4 +6,5 @@
       - httpie
       - ffmpeg
       - awscli
+      - ungit
     state: latest

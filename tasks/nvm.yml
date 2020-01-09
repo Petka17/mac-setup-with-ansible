@@ -1,15 +1,14 @@
 ---
-- name: Check nvm install
-  command: command -v nvm
-  ignore_errors: yes
-  register: nvm_result
+- name: Ensure latest nvm
+  homebrew:
+    name: nvm
+    state: latest
 
-- name: Ensure nvm
-  shell: >
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-  args:
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-  when: nvm_result.rc != 0
+- name: Ensure nvm init
+  lineinfile: path="{{ zshrc_file }}" line="{{ item }}"
+  with_items:
+    - export NVM_DIR="$HOME/.nvm"
+    - "[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" # This loads nvm"
 
 - name: Ensure latest yarn
   homebrew:

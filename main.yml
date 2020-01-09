@@ -21,8 +21,8 @@
       tags: [ids]
 
     # Ensure Git + Git Config
-    - import_tasks: tasks/vsc.yml
-      tags: [vsc]
+    - import_tasks: tasks/git.yml
+      tags: [git]
 
     # Vim
     - import_tasks: tasks/editors.yml
@@ -56,7 +56,6 @@
     - import_tasks: tasks/dart.yml
       tags: [dart]
 
-
     # java + jevn + maven
     - import_tasks: tasks/java.yml
       tags: [java]
@@ -71,7 +70,7 @@
 
     # Chrome + Extentions, Firefox, Opera, Tor
     - import_tasks: tasks/browsers.yml
-      tags: ['browsers']
+      tags: [browsers]
 
     # VSCode, Xcode, Android Studio, DataGrip, Mongo Compass
     - import_tasks: tasks/ide.yml
