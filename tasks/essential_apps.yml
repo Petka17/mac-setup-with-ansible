@@ -3,7 +3,7 @@
   homebrew_cask:
     name:
       - 1password
-      - spectacle
+      - rectangle
       - yandex-disk
       - google-backup-and-sync
       - tunnelblick
