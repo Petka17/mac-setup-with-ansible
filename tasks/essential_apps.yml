@@ -1,10 +1,10 @@
 ---
 - name: Install Latest Mac Apps
   homebrew_cask:
-    name:
-      - 1password
-      - rectangle
-      - yandex-disk
-      - google-backup-and-sync
-      - tunnelblick
-    state: latest
+    name: "{{ item }}"
+    state: upgraded
+  with_items:
+    - bitwarden
+    - rectangle
+    - google-backup-and-sync
+    - tunnelblick

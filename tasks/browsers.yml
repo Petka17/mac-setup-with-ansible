@@ -1,8 +1,10 @@
 ---
 - name: Ensure browsers
   homebrew_cask:
-    name:
-      - firefox
-      - google-chrome
-      - tor-browser
-    state: latest
+    name: "{{ item }}"
+    state: upgraded
+  with_items:
+    - firefox
+    - google-chrome
+    - tor-browser
+    - qutebrowser

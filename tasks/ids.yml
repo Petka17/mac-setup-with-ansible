@@ -2,17 +2,17 @@
 - name: Load secrets info
   include_vars:
     file: group_vars/secrets.yml
-  no_log: True
 
 - name: Ensure ssh folder
-  file: dest="{{ ansible_env.HOME }}/.ssh" state=directory
+  file:
+    dest: "{{ ansible_env.HOME }}/.ssh"
+    state: directory
 
 - name: Ensure private key
   copy:
     dest: "{{ keys.private.path }}"
     content: "{{ keys.private.content }}"
-    mode: 0600
-  no_log: True
+    mode: "600"
 
 - name: Ensure public key
   copy:

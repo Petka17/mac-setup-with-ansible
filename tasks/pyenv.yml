@@ -1,13 +1,34 @@
 ---
-- name: Ensure Latest pyenv
-  homebrew: name=pyenv state=latest
+- block:
+    - name: Ensure Latest pyenv
+      homebrew:
+        name: pyenv
+        state: latest
 
-- name: Ensure pyenv-virtualenv
-  homebrew: name=pyenv-virtualenv state=latest
+    - name: Ensure pyenv-virtualenv
+      homebrew:
+        name: pyenv-virtualenv
+        state: latest
 
-- name: Ensure py-init
-  lineinfile: path="{{ zshrc_file }}" line="{{ item }}"
-  with_items:
-    - eval "$(pyenv init -)"
-    - eval "$(pyenv virtualenv-init -)"
-    - export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+    - name: Ensure pyenv config folder
+      file:
+        path: "{{ pyenv_base_dir }}"
+        state: directory
+
+    - name: Ensure pyenv init file
+      copy:
+        dest: "{{ zsh_config_path }}/pyenv_init"
+        content: |
+          export PYENV_ROOT={{ pyenv_base_dir }}
+          export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+          eval "$(pyenv init -)"
+          eval "$(pyenv virtualenv-init -)"
+          export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+
+    - name: Ensure source of pyenv init file
+      lineinfile:
+        path: "{{ zshrc_file }}"
+        line: source "{{ zsh_config_path }}/pyenv_init"
+
+  vars:
+    pyenv_base_dir: "{{ ansible_env.HOME }}/.local/share/pyenv"

@@ -1,17 +1,31 @@
 ---
-- name: Ensure latest nvm
-  homebrew:
-    name: nvm
-    state: latest
+- block:
+    - name: Ensure latest nvm
+      homebrew:
+        name: nvm
+        state: latest
 
-- name: Ensure nvm init
-  lineinfile: path="{{ zshrc_file }}" line="{{ item }}"
-  with_items:
-    - export NVM_DIR="$HOME/.nvm"
-    - "[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" # This loads nvm"
+    - name: Ensure nvm base folder
+      file:
+        path: "{{ nvm_base_dir }}"
+        state: directory
+
+    - name: Ensure nvm init file
+      copy:
+        dest: "{{ zsh_config_path }}/nvm_init"
+        content: |
+          export NVM_DIR={{ nvm_base_dir }}
+          source /usr/local/opt/nvm/nvm.sh
+
+    - name: Ensure source of nvm init file
+      lineinfile:
+        path: "{{ zshrc_file }}"
+        line: source "{{ zsh_config_path }}/nvm_init"
+
+  vars:
+    nvm_base_dir: "{{ ansible_env.HOME }}/.local/share/nvm"
 
 - name: Ensure latest yarn
   homebrew:
     name: yarn
     state: latest
-    install_options: ignore-dependencies

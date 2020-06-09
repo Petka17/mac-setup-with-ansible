@@ -1,26 +1,12 @@
 ---
 - name: Install Latest Mac Apps
   homebrew_cask:
-    name:
-      - the-unarchiver
-      - postman
-      - cleanmymac3
-      - parallels-toolbox
-      - franz
-      - skype
-      - notion
-      # Telegram
-      - trello
-      - vlc
-      # Microsoft Remote Desktop
-      - teamviewer
-      - figma
-      # Microsoft Office
-      - grammarly
-      - electrum
-      # RealTimeBoard
-      # Boxy SVG
-      # Icon Set Creator
-      # Torrent
-      # WebMoney Keeper
-    state: latest
+    name: "{{ item }}"
+    state: upgraded
+  with_items: 
+    - the-unarchiver
+    - postman
+    - notion
+    - vlc
+    - teamviewer
+    - grammarly

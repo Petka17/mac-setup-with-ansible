@@ -1,5 +1,9 @@
 ---
 - name: Ensure Latest elm and elm-format
   homebrew:
-    name: [elm, elm-format]
+    name: "{{ item }}"
     state: latest
+  with_items:
+    - elm
+    - elm-format
+

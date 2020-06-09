@@ -1,153 +1,130 @@
 ---
-- block:
-    - block:
-        - name: Ensure iTerm.app
-          homebrew_cask: name=iterm2 state=latest
+  - block:
+      - name: Ensure iTerm.app
+        homebrew_cask:
+          name: iterm2
+          state: upgraded
 
-        - name: Ensure font tap
-          homebrew_tap: name=homebrew/cask-fonts state=present
+      - name: Ensure font tap
+        homebrew_tap:
+          name: homebrew/cask-fonts
+          state: present
 
-        - name: Ensure Droid Font
-          homebrew_cask: name=font-droidsansmono-nerd-font-mono state=latest
+      - name: Ensure Jetbrains Font
+        homebrew_cask:
+          name: font-jetbrains-mono
+          state: upgraded
 
-      # TODO: Setup iTerm2 profile
-      tags: [iterm]
+      # TODO: Setup iTerm2 profile: 
+      # - set font
+      # - allow access to the system clipboard (general -> selection)
 
-    - block:
-        - name: Ensure zsh
-          homebrew: name=zsh state=latest
+    tags: [iterm]
 
-        - name: Ensure default shell
-          shell: "chsh -s $(which zsh) {{ ansible_user_id }}"
-          become: true
-          register: chsh_result
-          changed_when: "'chsh: no changes made' not in chsh_result.stderr"
+  - block:
+      - name: Ensure zsh
+        homebrew:
+          name: zsh
+          state: latest
 
-        - name: Ensure .zshrc file exist
-          copy:
-            dest: "{{ zshrc_file }}"
-            content: ""
-            mode: 0644
-            force: no
+      - name: Ensure .zshrc file exist
+        copy:
+          dest: "{{ zshrc_file }}"
+          content: ""
+          mode: "644"
+          force: yes
+          backup: yes
 
-      tags: [zsh]
+      - name: Ensure zsh config folder
+        file:
+          path: "{{ zsh_config_path }}"
+          state: directory
 
-    - block:
-        - name: Ensure oh-my-zsh
-          git:
-            repo: https://github.com/robbyrussell/oh-my-zsh.git
-            dest: "{{ oh_my_zsh_home }}"
-            update: yes
-            force: yes
+      ### General zsh settings ###
 
-        - name: Ensure ZSH var export in zshrc
-          lineinfile: dest="{{ zshrc_file }}" regexp='^export ZSH' line="export ZSH={{ oh_my_zsh_home }}"
+      - name: Ensure general settings
+        copy:
+          dest: "{{ zsh_config_path }}/general"
+          src: files/zsh_general
+          remote_src: yes
+          force: yes
 
-        - name: Ensure powerlevel9k theme
-          git:
-            repo: https://github.com/bhilburn/powerlevel9k.git
-            dest: "{{ oh_my_zsh_home }}/custom/themes/powerlevel9k"
-            update: yes
-            force: yes
+      - name: Ensure source of general settings file
+        lineinfile:
+          path: "{{ zshrc_file }}"
+          line: source "{{ zsh_config_path }}/general"
 
-        - name: Ensure zsh theme
-          lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
-          with_items:
-            - {
-                regexp: "^ZSH_THEME",
-                line: 'ZSH_THEME="powerlevel9k/powerlevel9k"',
-              }
-            - {
-                regexp: "^POWERLEVEL9K_MODE",
-                line: 'POWERLEVEL9K_MODE="nerdfont-complete"',
-              }
-            # TODO: Enhance powerlevel theme
+      ### Alias ###
 
-        - name: Ensure plugins
-          git:
-            repo: https://github.com/zsh-users/{{ item }}
-            dest: "{{ oh_my_zsh_home }}/custom/plugins/{{ item }}"
-            update: yes
-            force: yes
-          with_items:
-            - zsh-completions
-            - zsh-autosuggestions
-            - zsh-syntax-highlighting
+      - name: Ensure alias file
+        copy:
+          dest: "{{ zsh_config_path }}/aliases"
+          src: files/zsh_aliases
+          remote_src: yes
+          force: yes
 
-        - name: Ensure zsh theme
-          lineinfile:
-            dest: "{{ zshrc_file }}"
-            regexp: "^plugins"
-            line: plugins=(vi-mode git zsh-completions httpie zsh-autosuggestions zsh-syntax-highlighting)
+      - name: Ensure source of alias file
+        lineinfile:
+          path: "{{ zshrc_file }}"
+          line: source "{{ zsh_config_path }}/aliases"
 
-        - name: Ensure oh-my-zsh source
-          lineinfile: dest={{ zshrc_file }} line="source $ZSH/oh-my-zsh.sh"
+      ### Node Version Manager ###
 
-      vars:
-        oh_my_zsh_home: "{{ ansible_env.HOME }}/.oh-my-zsh"
+      - import_tasks: tasks/nvm.yml
+        tags: [nvm]
 
-      tags: [zsh]
+      ### Python Version Manager ###
 
-    - block:
-        - name: Ensure base zsh params
-          lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
-          with_items:
-            - { regexp: "^CASE_SENSITIVE", line: 'CASE_SENSITIVE="false"' }
-            - {
-                regexp: "^HYPHEN_INSENSITIVE",
-                line: 'HYPHEN_INSENSITIVE="true"',
-              }
-            - {
-                regexp: "^DISABLE_AUTO_UPDATE",
-                line: 'DISABLE_AUTO_UPDATE="true"',
-              }
-            - {
-                regexp: "^DISABLE_LS_COLORS",
-                line: 'DISABLE_LS_COLORS="false"',
-              }
-            - {
-                regexp: "^DISABLE_AUTO_TITLE",
-                line: 'DISABLE_AUTO_TITLE="true"',
-              }
-            - {
-                regexp: "^ENABLE_CORRECTION",
-                line: 'ENABLE_CORRECTION="false"',
-              }
-            - {
-                regexp: "^COMPLETION_WAITING_DOTS",
-                line: 'COMPLETION_WAITING_DOTS="true"',
-              }
-            - {
-                regexp: "^DISABLE_UNTRACKED_FILES_DIRTY",
-                line: 'DISABLE_UNTRACKED_FILES_DIRTY="true"',
-              }
-            - { regexp: "^HIST_STAMPS", line: 'HIST_STAMPS="yyyy-mm-dd"' }
+      - import_tasks: tasks/pyenv.yml
+        tags: [pyenv]
 
-        - name: Ensure base shell environment
-          lineinfile: dest={{ zshrc_file }} regexp={{ item.regexp }} line={{ item.line }}
-          with_items:
-            - { regexp: "^export EDITOR", line: 'export EDITOR="vim"' }
-            - {
-                regexp: "^export SSH_KEY_PATH",
-                line: 'export SSH_KEY_PATH="{{ ansible_env.HOME }}/.ssh/rsa_id"',
-              }
+      ### Tmux ###
 
-        - name: Ensure alias folder
-          file: path={{ ansible_env.HOME }}/.aliases state=directory
+      - import_tasks: tasks/tmux.yml
+        tags: [tmux]
 
-        - name: Ensure alias file
-          copy:
-            dest: "{{ custom_alias_path }}"
-            src: files/custom_aliases
-            remote_src: yes
-            force: yes
+      ### Starship ###
 
-        - name: Ensure source of alias file
-          lineinfile:
-            path: "{{ zshrc_file }}"
-            line: source {{ custom_alias_path }}
+      - name: Ensure starship
+        homebrew:
+          name: starship
+          state: latest
 
-      vars:
-        custom_alias_path: "{{ ansible_env.HOME }}/.aliases/custom"
+      - name: Ensure starship active
+        lineinfile:
+          path: "{{ zshrc_file }}"
+          line: eval "$(starship init zsh)"
 
-      tags: [zsh]
+      ### Zsh plugin manager ###
+
+      - name: Ensure zplug
+        homebrew:
+          name: zplug
+          state: latest
+
+      - name: Ensure zplug config (list of plugins)
+        copy:
+          dest: "{{ zsh_config_path }}/zplug"
+          src: files/zsh_zplug
+          remote_src: yes
+          force: yes
+
+      - name: Ensure source of alias file
+        lineinfile:
+          path: "{{ zshrc_file }}"
+          line: source "{{ zsh_config_path }}/zplug"
+
+      - name: Ensure correct permissions
+        file:
+          path: "{{ item }}"
+          mode: "755"
+        with_items:
+          - /usr/local/share/zsh
+          - /usr/local/share/zsh/site-functions
+
+    vars:
+      zshrc_file: "{{ ansible_env.HOME }}/.zshrc"
+      zsh_config_path: "{{ ansible_env.HOME }}/.config/zsh"
+
+    tags: [zsh]
+

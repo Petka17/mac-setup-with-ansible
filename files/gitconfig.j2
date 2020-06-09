@@ -3,13 +3,17 @@
   email = {{ git.email }}
   signingkey = {{ git.signingkey }}
 [core]
-  editor = vim
+  editor = nvim
   excludesfile = {{ ansible_env.HOME }}/.gitignore_global
   autocrlf = input
+  pager = diff-so-fancy | less -RFX
+  whitespace = blank-at-eol,blank-at-eof,tab-in-indent
 [push]
   default = matching
-[web]
-  browser = google-chrome
+[merge]
+  conflictstyle = diff3
+[rebase]
+  autostash = true
 [color]
   ui = true
 [color "branch"]
@@ -33,12 +37,6 @@
 [github]
   user = {{ git.github.user }}
   token = {{ git.github.token }}
-[gitflow "prefix"]
-  feature = feature-
-  release = release-
-  hotfix = hotfix-
-  support = support-
-  versiontag = v
 [alias]
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --all
   type = cat-file -t

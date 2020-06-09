@@ -2,9 +2,14 @@
 - name: Ensure latest cli tools
   homebrew:
     name:
-      - mas
+      - ungit
+      - htop
+      - cloc
       - httpie
       - ffmpeg
       - awscli
-      - ungit
+      - telnet
+      - tree
+      - bat
+      - speedtest-cli
     state: latest

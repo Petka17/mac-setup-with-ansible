@@ -170,9 +170,10 @@
           value: false,
         }
 
-- block:
-    - name: "Get the current background image"
-      homebrew_cask: name=aerial state=latest
+- name: "Get the current background image"
+  homebrew_cask:
+    name: aerial
+    state: upgraded
 
 - block:
     - name: "Dock - Size"

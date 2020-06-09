@@ -1,16 +1,23 @@
 ---
 - block:
     - name: Ensure caskroom/versions tap
-      homebrew_tap: name=caskroom/versions state=present
+      homebrew_tap:
+        name: caskroom/versions
+        state: present
 
     - name: Ensure java 8 and latest
       homebrew_cask:
-        name: [java8, java]
+        name: "{{ item }}"
         state: latest
+      with_items:
+        - java11
+        - java
 
 - block:
     - name: Ensure latest jevn
-      homebrew: name=jenv state=latest
+      homebrew:
+        name: jenv
+        state: latest
 
     - name: Ensure jenv init
       lineinfile:
@@ -33,4 +40,5 @@
       with_items: "{{ installed_java.files }}"
 
 - name: Ensure latest maven
-  homebrew: name=maven state=latest
+  homebrew:
+    name: maven state=latest
