@@ -1,6 +1,5 @@
 ---
-- name: Ensure Latest Neovim
+- name: Ensure Neovim
   homebrew:
     name: neovim
-    state: latest
 

@@ -1,0 +1,8 @@
+---
+- name: Ensure password-store util
+  homebrew:
+    name: 
+      - pass
+      - pwgen
+      - pass-otp
+      - gnupg

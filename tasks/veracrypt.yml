@@ -1,0 +1,9 @@
+---
+- name: Ensure FUSE-T
+  homebrew_cask:
+    name: fuse-t
+
+- name: Ensure VeraCrypt 
+  homebrew_cask:
+    name: veracrypt-fuse-t
+

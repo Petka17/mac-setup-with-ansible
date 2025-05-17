@@ -12,4 +12,14 @@
       - tree
       - bat
       - speedtest-cli
-    state: latest
+      - hledger
+      - mise
+      - mkcert
+      - nss
+      - stow
+      - fzf
+      - ripgrep
+      - fd
+      - choose-gui
+      - pinentry-mac
+

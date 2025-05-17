@@ -4,38 +4,68 @@
   gather_facts: yes
 
   tasks:
-    # essential mac apps
-    - import_tasks: tasks/essential_apps.yml
-      tags: [essential]
+    # Fonts
+    - import_tasks: tasks/fonts.yml
+      tags:
+        - font
+        - term
 
-    # firefox, chrome, tor browser
-    - import_tasks: tasks/browsers.yml
-      tags: [browsers]
+    # Terminal
+    - import_tasks: tasks/terminal.yml
+      tags:
+        - term
+
+    # VeraCrypt
+    - import_tasks: tasks/veracrypt.yml
+      tags:
+        - secret
+
+    # Pass
+    - import_tasks: tasks/pass.yml
+      tags:
+        - secret
+
+    # Git
+    - import_tasks: tasks/git.yml
+      tags: 
+        - git
+
+    # Useful cli tools
+    - import_tasks: tasks/cli_tools.yml
+      tags: 
+        - cli_tools
+
+    # Neovim
+    - import_tasks: tasks/neovim.yml
+      tags: 
+        - neovim
 
     # docker app
     - import_tasks: tasks/docker.yml
-      tags: [docker]
+      tags: 
+        - docker
 
-    # useful cli tools
-    - import_tasks: tasks/cli_tools.yml
-      tags: [cli_tools]
+    # firefox, chrome, tor browser
+    - import_tasks: tasks/browsers.yml
+      tags: 
+        - browsers
 
-    # ssh keys
-    - import_tasks: tasks/ids.yml
-      tags: [ids]
+    # IDE
+    - import_tasks: tasks/ide.yml
+      tags:
+        - ide
 
-    # git
-    - import_tasks: tasks/git.yml
-      tags: [git]
+    # LibreOffice
+    - import_tasks: tasks/office.yml
+      tags: 
+        - office
 
-    # iterm + zsh
-    - import_tasks: tasks/terminal.yml
-      tags: [terminal]
-
-    # neovim
-    - import_tasks: tasks/neovim.yml
-      tags: [neovim]
-
-    # other mac apps
+    # Some mac apps
     - import_tasks: tasks/mac_apps.yml
-      tags: [mac_apps]
+      tags: 
+        - mac_apps
+
+    # Upgrade apps
+    - import_tasks: tasks/brew_upgrade.yml
+      tags:
+        - upgrade

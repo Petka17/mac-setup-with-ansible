@@ -1,0 +1,4 @@
+---
+- name: Ensure jetbrans mono nerd font
+  homebrew_cask:
+    name: font-jetbrains-mono-nerd-font

@@ -1,5 +1,4 @@
 ---
-- name: Ensure Latest DB IDE
+- name: Ensure DB IDE
   homebrew_cask:
     name: datagrip
-    state: upgraded

@@ -2,5 +2,4 @@
 - name: Ensure Docker
   homebrew_cask:
     name: docker
-    state: upgraded
 

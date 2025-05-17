@@ -1,12 +1,11 @@
 ---
-- name: Install Latest Mac Apps
+- name: Install Mac Apps
   homebrew_cask:
     name: "{{ item }}"
-    state: upgraded
   with_items: 
     - the-unarchiver
-    - postman
-    - notion
     - vlc
-    - teamviewer
-    - grammarly
+    - protonvpn
+    - slack
+    - telegram
+    - zoom

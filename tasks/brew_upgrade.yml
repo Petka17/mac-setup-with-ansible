@@ -1,0 +1,12 @@
+---
+- name: Update Homebrew
+  homebrew:
+    update_homebrew: yes
+  register: brew_update
+  changed_when: brew_update.changed
+
+#- name: Upgrade all Homebrew packages
+#  homebrew:
+#    upgrade_all: yes
+#  register: brew_upgrade
+#  changed_when: brew_upgrade.changed

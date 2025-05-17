@@ -1,0 +1,4 @@
+---
+- name: Ensure LibreOffice
+  homebrew_cask:
+    name: libreoffice

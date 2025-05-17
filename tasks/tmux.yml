@@ -1,29 +1,6 @@
 ---
-- block:
-    - name: Ensure Latest tmux
-      homebrew:
-        name: tmux
-        state: latest
-
-    - name: Ensure Latest tmuxinator
-      homebrew:
-        name: tmuxinator
-        state: latest
-
-    - name: Ensure tmux config
-      template: 
-        dest: "{{ ansible_env.HOME }}/.tmux.conf"
-        src: files/tmux.conf
-
-    - name: Ensure tmux config file
-      template:
-        dest: "{{ zsh_config_path }}/tmux"
-        src: files/tmux
-
-    - name: Ensure sourcing tmux config in zshrc
-      lineinfile: 
-        path: "{{ zshrc_file }}"
-        line: source "{{ zsh_config_path }}/tmux"
-
-  vars:
-    tmux_plugin_path: "{{ ansible_env.HOME }}/.config/tmux_plugins"
+- name: Ensure tmux
+  homebrew:
+    name: 
+      - tmux
+      - tmuxinator

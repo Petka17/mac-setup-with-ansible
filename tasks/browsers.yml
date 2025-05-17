@@ -2,9 +2,9 @@
 - name: Ensure browsers
   homebrew_cask:
     name: "{{ item }}"
-    state: upgraded
   with_items:
-    - firefox
+    - firefox@developer-edition
     - google-chrome
+    - chromium
     - tor-browser
-    - qutebrowser
+    - brave-browser
