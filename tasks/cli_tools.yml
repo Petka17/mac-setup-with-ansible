@@ -22,4 +22,5 @@
       - fd
       - choose-gui
       - pinentry-mac
+      - syncthing
 
