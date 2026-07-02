@@ -1,0 +1,44 @@
+[user]
+  name = Peter K
+  email = mail+github@petka.dev
+
+[init]
+  defaultBranch = main
+
+[core]
+  editor = nvim
+  excludesFile = ~/.gitignore_global
+  autocrlf = input
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true
+  side-by-side = true
+  line-numbers = true
+
+[pull]
+  rebase = true
+
+[push]
+  autoSetupRemote = true
+
+[rebase]
+  autoStash = true
+
+[merge]
+  conflictstyle = diff3
+
+[diff]
+  colorMoved = zebra
+
+[color]
+  ui = auto
+
+[alias]
+  s = status
+  d = diff
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --all
+  l = log --oneline

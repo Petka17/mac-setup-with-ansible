@@ -1,0 +1,15 @@
+---
+- name: Install Claude Code
+  community.general.homebrew_cask:
+    name:
+      - claude-code
+      - claude
+    state: latest
+
+- name: Stow claude-code dotfiles
+  # --restow, no creates guard: with --no-folding each file gets its own
+  # symlink, so files added to the package later would never be linked if the
+  # task stopped running once a sentinel file existed.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow claude-code
+  changed_when: false

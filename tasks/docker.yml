@@ -1,5 +1,30 @@
 ---
-- name: Ensure Docker
-  homebrew_cask:
-    name: docker
+- name: Install Docker CLI and Colima
+  # Open-source replacement for Docker Desktop: colima runs the Linux VM and
+  # container runtime, the docker formula is just the CLI that talks to it.
+  # compose and buildx ship as separate CLI plugins. Nothing here needs sudo.
+  # Start the VM with `colima start` (or `brew services start colima` to have
+  # it come up at login).
+  # docker-credential-helper provides docker-credential-osxkeychain so that
+  # `docker login` stores registry tokens in the macOS keychain instead of
+  # base64-plaintext in config.json (activated by credsStore below).
+  community.general.homebrew:
+    name:
+      - colima
+      - docker
+      - docker-compose
+      - docker-buildx
+      - docker-credential-helper
+    state: latest
 
+- name: Stow docker dotfiles
+  # Seeds ~/.docker/config.json with cliPluginsExtraDirs so the brew-installed
+  # compose/buildx plugins are found. Unlike the other stow packages this one
+  # is seed-only (`creates` guard, no --restow): docker itself rewrites
+  # config.json (`docker login`, context switches by `colima start`) and
+  # replaces the symlink with a regular file — that's expected, and restowing
+  # would then fail with a conflict. --no-folding because ~/.docker also holds
+  # runtime state (contexts/, buildx/) that must not land in the repo.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding docker
+    creates: "{{ ansible_env.HOME }}/.docker/config.json"

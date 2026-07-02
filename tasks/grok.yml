@@ -1,0 +1,13 @@
+---
+- name: Install Grok Build
+  community.general.homebrew_cask:
+    name: grok-build
+    state: latest
+
+- name: Stow grok dotfiles
+  # --restow, no creates guard: with --no-folding each file gets its own
+  # symlink, so files added to the package later would never be linked if the
+  # task stopped running once a sentinel file existed.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow grok
+  changed_when: false

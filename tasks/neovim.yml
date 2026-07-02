@@ -1,5 +1,0 @@
----
-- name: Ensure Neovim
-  homebrew:
-    name: neovim
-

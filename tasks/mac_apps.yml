@@ -1,11 +1,17 @@
 ---
 - name: Install Mac Apps
-  homebrew_cask:
-    name: "{{ item }}"
-  with_items: 
-    - the-unarchiver
-    - vlc
-    - protonvpn
-    - slack
-    - telegram
-    - zoom
+  # greedy: several of these casks are marked auto_updates, which
+  # `brew upgrade` skips by default — so `state: latest` alone would never
+  # upgrade them after the first install. greedy forces brew to own their
+  # updates.
+  community.general.homebrew_cask:
+    name:
+      - the-unarchiver
+      - vlc
+      - protonvpn
+      - slack
+      - telegram
+      - zoom
+      - libreoffice
+    state: latest
+    sudo_password: "{{ sudo_password }}"

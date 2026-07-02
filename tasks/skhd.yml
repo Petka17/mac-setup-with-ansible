@@ -1,0 +1,25 @@
+---
+- name: Tap koekeishiya/formulae
+  community.general.homebrew_tap:
+    name: koekeishiya/formulae
+
+- name: Install skhd
+  community.general.homebrew:
+    name: koekeishiya/formulae/skhd
+    state: latest
+
+- name: Stow skhd dotfiles
+  # --restow, no creates guard: with --no-folding each file gets its own
+  # symlink, so files added to the package later would never be linked if the
+  # task stopped running once a sentinel file existed.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow skhd
+  changed_when: false
+
+- name: Start skhd service
+  # skhd exits non-zero when the service is already bootstrapped, which is the
+  # normal case on every run after the first — don't fail the play for it.
+  ansible.builtin.command:
+    cmd: skhd --start-service
+  changed_when: false
+  failed_when: false

@@ -1,10 +1,14 @@
 ---
-- name: Ensure browsers
-  homebrew_cask:
-    name: "{{ item }}"
-  with_items:
-    - firefox@developer-edition
-    - google-chrome
-    - chromium
-    - tor-browser
-    - brave-browser
+- name: Install browsers
+  # greedy: most of these casks are marked auto_updates, which `brew upgrade`
+  # skips by default — so `state: latest` alone would never upgrade them after
+  # the first install. greedy forces brew to own their updates.
+  community.general.homebrew_cask:
+    name:
+      - arc
+      - brave-browser
+      - ungoogled-chromium
+      - google-chrome
+      - firefox@developer-edition
+    state: latest
+    greedy: true

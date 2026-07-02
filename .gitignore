@@ -1,58 +1,10 @@
-# File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
-
-# Created by https://www.gitignore.io/api/ansible,macos,visualstudiocode,vagrant
-# Edit at https://www.gitignore.io/?templates=ansible,macos,visualstudiocode,vagrant
-
-### Ansible ###
+# Never commit secrets or local state.
 *.retry
-
-### macOS ###
-# General
+vault-pass*
+*.vault
 .DS_Store
-.AppleDouble
-.LSOverride
 
-# Icon must end with two \r
-Icon
+# Ansible venv
+.ansible/
 
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-### Vagrant ###
-# General
-.vagrant/
-
-# Log files (if you are creating logs in debug mode, uncomment this)
-# *.logs
-
-### Vagrant Patch ###
-*.box
-
-### VisualStudioCode ###
-.vscode/*
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-
-# End of https://www.gitignore.io/api/ansible,macos,visualstudiocode,vagrant
-
-# Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
-
-.password
+.claude

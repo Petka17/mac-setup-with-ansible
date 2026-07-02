@@ -1,71 +1,118 @@
 ---
-- hosts: localhost
+- name: Configure macOS
+  hosts: localhost
   connection: local
-  gather_facts: yes
+  gather_facts: true
+
+  vars:
+    homebrew_prefix: /opt/homebrew
+    ansible_become_password: "{{ sudo_password }}"
+
+  vars_prompt:
+    - name: sudo_password
+      prompt: "Sudo password"
+      private: true
+
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
 
   tasks:
-    # Fonts
-    - import_tasks: tasks/fonts.yml
-      tags:
-        - font
-        - term
+    - name: macOS preferences
+      ansible.builtin.import_tasks: tasks/macos-defaults.yml
+      tags: [defaults]
 
-    # Terminal
-    - import_tasks: tasks/terminal.yml
-      tags:
-        - term
+    - name: Homebrew
+      ansible.builtin.import_tasks: tasks/homebrew.yml
+      tags: [homebrew]
 
-    # VeraCrypt
-    - import_tasks: tasks/veracrypt.yml
-      tags:
-        - secret
+    - name: Fonts
+      ansible.builtin.import_tasks: tasks/fonts.yml
+      tags: [fonts]
 
-    # Pass
-    - import_tasks: tasks/pass.yml
-      tags:
-        - secret
+    - name: Terminal Utilities
+      ansible.builtin.import_tasks: tasks/terminal.yml
+      tags: [term]
 
-    # Git
-    - import_tasks: tasks/git.yml
-      tags: 
-        - git
+    - name: mkcert
+      ansible.builtin.import_tasks: tasks/mkcert.yml
+      tags: [mkcert]
 
-    # Useful cli tools
-    - import_tasks: tasks/cli_tools.yml
-      tags: 
-        - cli_tools
+    - name: mise
+      ansible.builtin.import_tasks: tasks/mise.yml
+      tags: [mise]
 
-    # Neovim
-    - import_tasks: tasks/neovim.yml
-      tags: 
-        - neovim
+    - name: zsh
+      ansible.builtin.import_tasks: tasks/zsh.yml
+      tags: [zsh]
 
-    # docker app
-    - import_tasks: tasks/docker.yml
-      tags: 
-        - docker
+    - name: Custom scripts
+      ansible.builtin.import_tasks: tasks/scripts.yml
+      tags: [scripts]
 
-    # firefox, chrome, tor browser
-    - import_tasks: tasks/browsers.yml
-      tags: 
-        - browsers
+    - name: WezTerm
+      ansible.builtin.import_tasks: tasks/wezterm.yml
+      tags: [wezterm]
 
-    # IDE
-    - import_tasks: tasks/ide.yml
-      tags:
-        - ide
+    - name: Starship
+      ansible.builtin.import_tasks: tasks/starship.yml
+      tags: [starship]
 
-    # LibreOffice
-    - import_tasks: tasks/office.yml
-      tags: 
-        - office
+    - name: tmux
+      ansible.builtin.import_tasks: tasks/tmux.yml
+      tags: [tmux]
 
-    # Some mac apps
-    - import_tasks: tasks/mac_apps.yml
-      tags: 
-        - mac_apps
+    - name: Git
+      ansible.builtin.import_tasks: tasks/git.yml
+      tags: [git]
 
-    # Upgrade apps
-    - import_tasks: tasks/brew_upgrade.yml
-      tags:
-        - upgrade
+    - name: Neovim
+      ansible.builtin.import_tasks: tasks/nvim.yml
+      tags: [nvim]
+
+    - name: Pass utilities
+      ansible.builtin.import_tasks: tasks/pass.yml
+      tags: [pass]
+
+    - name: skhd
+      ansible.builtin.import_tasks: tasks/skhd.yml
+      tags: [skhd]
+
+    - name: Ledger
+      ansible.builtin.import_tasks: tasks/ledger.yml
+      tags: [ledger]
+
+    - name: Claude Code
+      ansible.builtin.import_tasks: tasks/claude-code.yml
+      tags: [claude]
+
+    - name: Opencode
+      ansible.builtin.import_tasks: tasks/opencode.yml
+      tags: [opencode]
+
+    - name: Grok Build
+      ansible.builtin.import_tasks: tasks/grok.yml
+      tags: [grok]
+
+    - name: VeraCrypt
+      ansible.builtin.import_tasks: tasks/veracrypt.yml
+      tags: [veracrypt]
+
+    - name: Docker
+      ansible.builtin.import_tasks: tasks/docker.yml
+      tags: [docker]
+
+    - name: AWS CLI
+      ansible.builtin.import_tasks: tasks/aws.yml
+      tags: [aws]
+
+    - name: Browsers
+      ansible.builtin.import_tasks: tasks/browsers.yml
+      tags: [browsers]
+
+    - name: Mac Apps
+      ansible.builtin.import_tasks: tasks/mac_apps.yml
+      tags: [mac_apps]
+
+    - name: Cleanup
+      ansible.builtin.import_tasks: tasks/cleanup.yml
+      tags: [cleanup]

@@ -1,0 +1,23 @@
+---
+- name: Remove formulae that are no longer depended on
+  # Both brew commands print nothing when there is nothing to do, so an
+  # empty stdout means no change.
+  ansible.builtin.command:
+    cmd: brew autoremove
+  register: brew_autoremove
+  changed_when: brew_autoremove.stdout != ""
+
+- name: Delete old versions and stale downloads of installed packages
+  ansible.builtin.command:
+    cmd: brew cleanup --prune=all
+  register: brew_cleanup
+  changed_when: brew_cleanup.stdout != ""
+
+- name: Prune mise tool versions no longer referenced by any config
+  # Loose pins like `latest` leave the previous version behind after every
+  # `mise upgrade`; prune deletes versions no tracked config points at
+  # anymore. Runs without confirmation and only touches mise-managed
+  # installs under ~/.local/share/mise.
+  ansible.builtin.command:
+    cmd: mise prune
+  changed_when: false

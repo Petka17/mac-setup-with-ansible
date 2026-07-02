@@ -1,0 +1,46 @@
+---
+- name: Install tree-sitter CLI
+  # nvim-treesitter's main branch compiles parsers via the CLI. The `tree-sitter`
+  # formula is only the library (libtree-sitter); the binary lives in `tree-sitter-cli`.
+  community.general.homebrew:
+    name: tree-sitter-cli
+    state: latest
+
+- name: Install luarocks
+  # Mason installs luacheck (a Lua rock) via `luarocks install`. Without luarocks
+  # (and the Lua interpreter it depends on) the install fails with ENOENT.
+  community.general.homebrew:
+    name: luarocks
+    state: latest
+
+- name: Install wget
+  # Mason installs uses wget
+  community.general.homebrew:
+    name: wget
+    state: latest
+
+- name: Install hledger-lsp
+  # LSP for hledger journals (account-name completion), consumed by
+  # lsp/hledger.lua. Not in Homebrew or Mason; it's a Go program, so build it
+  # with the Go toolchain mise already installs (tasks/mise.yml runs earlier).
+  # GOBIN puts the binary in ~/.local/bin, which .zprofile already has on PATH —
+  # so no shell changes, and native vim.lsp finds `hledger-lsp` on next launch.
+  # `mise exec` runs `go` from the mise-managed version rather than assuming an
+  # interactive shell has activated mise. No `creates` guard: @latest is
+  # re-resolved on every run so the binary tracks new releases; `go install`
+  # itself is cheap when nothing changed (module cache hit, no rebuild).
+  ansible.builtin.command:
+    cmd: mise exec -- go install github.com/juev/hledger-lsp/cmd/hledger-lsp@latest
+  changed_when: false
+  environment:
+    GOBIN: "{{ ansible_env.HOME }}/.local/bin"
+
+- name: Stow nvim dotfiles
+  # No --no-folding: let stow fold the whole package into a single
+  # `~/.config/nvim` symlink so files added to the repo later appear
+  # automatically (with --no-folding each file is linked individually and new
+  # ones are missed until a re-stow). Safe for nvim because it keeps runtime
+  # state in ~/.local/share/nvim and ~/.local/state/nvim, not ~/.config/nvim.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} nvim
+    creates: "{{ ansible_env.HOME }}/.config/nvim/init.lua"

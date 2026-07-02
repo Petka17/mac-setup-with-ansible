@@ -1,0 +1,31 @@
+---
+- name: Install mise
+  community.general.homebrew:
+    name: mise
+    state: latest
+
+- name: Remove standalone mise bootstrap binary
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/bin/mise"
+    state: absent
+
+- name: Stow mise dotfiles
+  # No --no-folding: fold into a single ~/.config/mise symlink so new repo
+  # files appear automatically. Safe because mise keeps runtime state in
+  # ~/.local/share/mise and ~/.cache/mise, not ~/.config/mise.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} mise
+    creates: "{{ ansible_env.HOME }}/.config/mise/config.toml"
+
+- name: Install mise tools
+  ansible.builtin.command:
+    cmd: mise install
+  changed_when: false
+
+- name: Upgrade mise tools
+  # `mise install` only installs missing tools; loose pins like `latest`,
+  # `lts`, and `nightly` resolve once and then freeze. `mise upgrade`
+  # re-resolves them so those tools track new releases on every run.
+  ansible.builtin.command:
+    cmd: mise upgrade
+  changed_when: false

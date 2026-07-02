@@ -1,9 +1,15 @@
 ---
-- name: Ensure FUSE-T
-  homebrew_cask:
-    name: fuse-t
-
-- name: Ensure VeraCrypt 
-  homebrew_cask:
+- name: Install VeraCrypt (FUSE-T variant)
+  # pkg-installer cask: the installer calls sudo internally, so pass the
+  # playbook's sudo password like mac_apps.yml does — otherwise the first
+  # install hangs at a sudo prompt Ansible can't answer.
+  community.general.homebrew_cask:
     name: veracrypt-fuse-t
+    state: latest
+    sudo_password: "{{ sudo_password }}"
 
+- name: Ensure ~/.m exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.m"
+    state: directory
+    mode: "0755"

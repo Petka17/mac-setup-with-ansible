@@ -1,0 +1,18 @@
+[tools]
+neovim = "nightly"
+
+node = 'lts'
+pnpm = '10'
+yarn = '1.22.22'
+bun = 'latest'
+python = ['3.11']
+go = 'latest'
+"npm:ungit" = "1.5.28"
+
+[settings]
+# read version files used by other version managers, such as .nvmrc
+idiomatic_version_file_enable_tools = ['node', 'python']
+
+[settings.status]
+show_tools = false
+show_env = false

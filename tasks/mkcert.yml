@@ -1,0 +1,36 @@
+---
+- name: Install mkcert and nss
+  # nss provides certutil, which mkcert needs to install the root CA into
+  # Firefox's own trust store (Firefox ignores the macOS system keychain).
+  community.general.homebrew:
+    name:
+      - mkcert
+      - nss
+    state: latest
+
+- name: Create and trust the mkcert root CA
+  # Runs as root: trusting the CA calls `security add-trusted-cert` on the
+  # system keychain, and mkcert's internal sudo can't prompt inside a tty-less
+  # Ansible task (credentials cached by an earlier become task don't carry
+  # across task processes either). CAROOT pins the CA to the user's directory
+  # instead of root's HOME. Safe to run every time: mkcert exits 0 with an
+  # "already installed" message once trust is in place.
+  # HOME is pinned for the same reason as CAROOT: mkcert locates Firefox
+  # profiles via $HOME, which under become is root's. If Firefox has never
+  # been launched there's no profile yet and mkcert skips it — the task runs
+  # every play, so a later run picks it up.
+  ansible.builtin.command: mkcert -install
+  become: true
+  environment:
+    CAROOT: "{{ ansible_env.HOME }}/Library/Application Support/mkcert"
+    HOME: "{{ ansible_env.HOME }}"
+  register: mkcert_install
+  changed_when: "'already installed' not in mkcert_install.stderr"
+
+- name: Ensure the CA files are owned by the user, not root
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/Library/Application Support/mkcert"
+    state: directory
+    recurse: true
+    owner: "{{ ansible_user_id }}"
+  become: true

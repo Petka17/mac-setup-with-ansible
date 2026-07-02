@@ -1,14 +1,18 @@
 ---
-- name: Ensure Ghostty
-  homebrew_cask:
-    name: ghostty
-
-- name: Ensure starship
-  homebrew:
-    name: starship
-
-- name: Ensure TMUX
-  homebrew:
+- name: Install terminal tools
+  community.general.homebrew:
     name:
-      - tmux
-      - tmuxinator
+      - stow
+      - eza
+      - bat
+      - jq
+      - yq
+      - fd
+      - ripgrep
+      - fzf
+      - zoxide
+      - mactop
+      - tlrc
+      - cloc
+      - httpie
+    state: latest
