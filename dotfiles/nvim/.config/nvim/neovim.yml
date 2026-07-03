@@ -1,0 +1,13 @@
+---
+# Minimal selene standard library for Neovim config development.
+# Extends lua51 (Neovim's LuaJIT runtime is 5.1-compatible) and adds `vim` as a
+# global of any type, so accessing/calling `vim.api`, `vim.opt`, `vim.fn.*`, etc.
+# does not trip selene's undefined_variable / incorrect_standard_library_use
+# rules. We intentionally do NOT vendor the full vim API surface: lua_ls already
+# provides signature/type checking, so selene only needs to know `vim` exists.
+base: lua51
+name: neovim
+
+globals:
+  vim:
+    any: true

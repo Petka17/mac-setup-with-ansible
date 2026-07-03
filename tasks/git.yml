@@ -1,7 +1,16 @@
 ---
-- name: Ensure git
-  homebrew:
+- name: Install git tools
+  community.general.homebrew:
     name:
       - git
-      - diff-so-fancy
+      - git-delta
+      - gh
     state: latest
+
+- name: Stow git dotfiles
+  # --restow, no creates guard: with --no-folding each file gets its own
+  # symlink, so files added to the package later would never be linked if the
+  # task stopped running once a sentinel file existed.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow git
+  changed_when: false

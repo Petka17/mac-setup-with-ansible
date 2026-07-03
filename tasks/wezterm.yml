@@ -1,0 +1,13 @@
+---
+- name: Install WezTerm
+  community.general.homebrew_cask:
+    name: wezterm
+    state: latest
+
+- name: Stow wezterm dotfiles
+  # No --no-folding: fold into a single ~/.config/wezterm symlink so new repo
+  # files appear automatically. Safe because wezterm keeps no runtime state in
+  # ~/.config/wezterm.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} wezterm
+    creates: "{{ ansible_env.HOME }}/.config/wezterm/wezterm.lua"

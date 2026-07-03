@@ -1,0 +1,17 @@
+# selene config for this Neovim configuration itself.
+# `std = "neovim"` resolves to neovim.yml in this directory, which extends the
+# lua51 standard library (Neovim runs LuaJIT, 5.1-compatible) and declares the
+# `vim` global so selene does not flag every `vim.*` as an undefined variable.
+std = "neovim"
+
+[rules]
+# stylua owns layout; don't double-report whitespace/style concerns.
+mixed_table = "allow"
+
+# lua-language-server already reports these (and does so with type/scope
+# awareness), so silence them in selene to avoid duplicate diagnostics. selene
+# stays on purely for the footgun lints lua_ls does NOT cover: divide_by_zero,
+# almost_swapped, compare_nan, duplicate_keys, bad_string_escape, empty_if, etc.
+unused_variable = "allow"
+undefined_variable = "allow"
+shadowing = "allow"

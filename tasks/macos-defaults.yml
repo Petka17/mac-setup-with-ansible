@@ -1,0 +1,60 @@
+---
+- name: Disable automatic light/dark switching
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleInterfaceStyleSwitchesAutomatically
+    type: bool
+    value: false
+
+- name: Set the interface style to Dark
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleInterfaceStyle
+    type: string
+    value: Dark
+
+- name: Apply Dark mode immediately
+  ansible.builtin.command: >
+    osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
+  changed_when: false
+
+- name: Stop rearranging Spaces based on most recent use
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: mru-spaces
+    type: bool
+    value: false
+
+- name: Position the Dock on the right edge
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: orientation
+    type: string
+    value: right
+
+- name: Automatically hide and show the Dock
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: true
+
+- name: Disable Dock icon magnification
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: magnification
+    type: bool
+    value: false
+
+- name: Set Dock icon size a little above the minimum
+  # tilesize slider runs 16 (smallest) to 128 (largest); 36 sits just above the floor.
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: tilesize
+    type: int
+    value: 36
+
+- name: Restart the Dock so changes take effect
+  ansible.builtin.command: killall Dock
+  changed_when: false
+  failed_when: false

@@ -1,0 +1,16 @@
+---
+- name: Update Homebrew itself
+  community.general.homebrew:
+    update_homebrew: true
+  changed_when: false
+
+- name: Ensure ~/.config exists before any stow task runs
+  # On a fresh machine ~/.config doesn't exist yet. GNU Stow folds at the
+  # highest level possible, so the first folding stow package (mise) would
+  # otherwise create ~/.config itself as a symlink into this repo — and until
+  # a later stow splits that fold open, anything writing to ~/.config would
+  # write into the repo. Same guard as ~/.local/bin in tasks/scripts.yml.
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config"
+    state: directory
+    mode: "0755"

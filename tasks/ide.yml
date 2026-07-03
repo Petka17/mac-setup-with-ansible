@@ -1,4 +1,0 @@
----
-- name: Ensure DB IDE
-  homebrew_cask:
-    name: datagrip

@@ -1,0 +1,8 @@
+{
+  "runtime.version": "LuaJIT",
+  "diagnostics.globals": ["vim"],
+  "workspace.checkThirdParty": false,
+  "workspace.library": ["$VIMRUNTIME", "${3rd}/luv/library"],
+  "completion.callSnippet": "Replace",
+  "format.enable": false
+}

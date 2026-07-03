@@ -1,0 +1,11 @@
+---
+- name: Install zsh completion packages
+  community.general.homebrew:
+    name:
+      - zsh-completions
+    state: latest
+
+- name: Stow zsh dotfiles
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow zsh
+  changed_when: false

@@ -1,0 +1,7 @@
+---
+skip_list:
+  # `state: latest` is the whole point of this playbook — it keeps the
+  # machine up to date, it doesn't pin versions.
+  - package-latest
+  # Task names intentionally mirror lowercase tool names (mise, zsh, tmux…).
+  - name[casing]

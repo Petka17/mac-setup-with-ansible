@@ -1,0 +1,7 @@
+---
+- name: Install ledger and hledger
+  community.general.homebrew:
+    name:
+      - ledger
+      - hledger
+    state: latest

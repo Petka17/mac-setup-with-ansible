@@ -1,0 +1,17 @@
+# sesh — smart tmux session manager. https://github.com/joshmedeski/sesh
+#
+# Repos are discovered automatically from zoxide (they land in the DB the first
+# time you `cd`/`z` into them). Only pin destinations here that aren't reliably
+# in zoxide — non-repo dirs you want in the picker unconditionally.
+
+[default_session]
+preview_command = "eza --all --git --icons --color=always {}"
+
+[[session]]
+name = "ledger"
+path = "~/.m/.ledger"
+
+# Obsidian notes (iCloud). Uncomment on machines where this path is synced:
+# [[session]]
+# name = "notes"
+# path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"

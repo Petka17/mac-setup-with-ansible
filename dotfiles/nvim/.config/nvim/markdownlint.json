@@ -1,0 +1,5 @@
+{
+  "//": "Default markdownlint rules used by efm (lsp/efm.lua) when a project has no .markdownlint.* of its own. MD013 (line-length) is off: line length in prose/markdown is a style choice, not an error.",
+  "default": true,
+  "MD013": false
+}

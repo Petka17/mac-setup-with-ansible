@@ -1,0 +1,20 @@
+---
+- name: Tap anomalyco/tap
+  community.general.homebrew_tap:
+    name: anomalyco/tap
+
+- name: Install Opencode
+  # Fully qualified name: the anomalyco tap shadows homebrew-core's `opencode`
+  # formula, and the bare name would resolve to core on a machine without the
+  # tap — a different distribution than the one this setup targets.
+  community.general.homebrew:
+    name: anomalyco/tap/opencode
+    state: latest
+
+- name: Stow opencode dotfiles
+  # --restow, no creates guard: with --no-folding each file gets its own
+  # symlink, so files added to the package later would never be linked if the
+  # task stopped running once a sentinel file existed.
+  ansible.builtin.command:
+    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow opencode
+  changed_when: false

@@ -1,0 +1,35 @@
+---
+name: Lint
+
+on:
+  # Direct pushes to master (this repo's usual workflow).
+  push:
+    branches: [master]
+  # Every pull request, on open and on every new commit — the branch filter
+  # above applies only to the push trigger, not here.
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # The full `ansible` package (not just ansible-core) so that
+      # community.general modules resolve for ansible-lint and syntax-check —
+      # same floor as bootstrap.sh installs.
+      - name: Install linters
+        run: pip install "ansible>=11" ansible-lint yamllint
+
+      - name: yamllint
+        run: yamllint main.yml tasks/ .github/
+
+      - name: ansible-lint
+        run: ansible-lint
+
+      - name: Playbook syntax check
+        run: ansible-playbook --syntax-check main.yml
