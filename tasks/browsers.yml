@@ -4,11 +4,6 @@
   # skips by default — so `state: latest` alone would never upgrade them after
   # the first install. greedy forces brew to own their updates.
   community.general.homebrew_cask:
-    name:
-      - arc
-      - brave-browser
-      - ungoogled-chromium
-      - google-chrome
-      - firefox@developer-edition
+    name: "{{ browsers }}"
     state: latest
     greedy: true

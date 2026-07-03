@@ -26,7 +26,7 @@ jobs:
         run: pip install "ansible>=11" ansible-lint yamllint
 
       - name: yamllint
-        run: yamllint main.yml tasks/ .github/
+        run: yamllint main.yml local.example.yml tasks/ vars/ .github/
 
       - name: ansible-lint
         run: ansible-lint

@@ -1,6 +1,5 @@
-[user]
-  name = Peter K
-  email = mail+github@petka.dev
+[include]
+  path = ~/.gitconfig.local
 
 [init]
   defaultBranch = main

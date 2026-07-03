@@ -28,9 +28,10 @@ xcode-select --install
 # 2. Install Homebrew — https://brew.sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 3. Clone and run
+# 3. Clone, set machine-local vars, run
 git clone https://github.com/petka17/mac-setup-with-ansible.git
 cd ./mac-setup-with-ansible
+cp local.example.yml local.yml   # then edit: profile + git identity
 ./bootstrap.sh
 ```
 
@@ -56,12 +57,35 @@ selected. Just enter it; only tasks that actually need root use it.
 
 You can also pass any other `ansible-playbook` flag straight through, e.g. `./bootstrap.sh --check` for a dry run.
 
+## Machine profiles & local vars
+
+Two profiles exist: `personal` (the default) and `work`. The work profile skips
+personal-only areas (pass/gnupg, skhd, ledger, grok, veracrypt, aws, mac_apps)
+and installs a smaller browser set. Profile-scoped lists live in the committed
+`vars/personal.yml` and `vars/work.yml`.
+
+Machine-scoped settings — which profile this box runs, plus your git identity
+(written to `~/.gitconfig.local`, which the stowed `.gitconfig` includes) —
+live in a gitignored `local.yml`. Once per machine, after cloning:
+
+```bash
+cp local.example.yml local.yml   # then edit profile + git identity
+```
+
+`bootstrap.sh` passes the file on every run, so the choice can't be forgotten
+on re-runs. Without a `local.yml` the playbook fails fast with a pointer to
+`local.example.yml` — the git identity has no sensible default. To skip an
+area on the work profile, add `when: profile == 'personal'` to its
+`import_tasks` line in `main.yml`.
+
 ## Layout
 
 ```plain
 mac-setup-with-ansible/
 ├── bootstrap.sh           # mise + venv + Ansible bootstrap, then runs the playbook
 ├── main.yml               # play: imports each task file, in order
+├── local.example.yml      # template for gitignored local.yml (profile, git identity)
+├── vars/                  # profile-scoped vars: personal.yml, work.yml
 ├── ansible.cfg
 ├── tasks/                 # one file per concern, each with a matching tag
 │   ├── homebrew.yml       # keeps Homebrew itself up to date (tag: homebrew)
