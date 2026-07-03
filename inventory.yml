@@ -1,0 +1,6 @@
+---
+# Local-only inventory for bootstrap runs against this machine.
+all:
+  hosts:
+    localhost:
+      ansible_connection: local

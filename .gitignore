@@ -4,6 +4,9 @@ vault-pass*
 *.vault
 .DS_Store
 
+# Machine-local vars (profile, git identity) — see local.example.yml
+local.yml
+
 # Ansible venv
 .ansible/
 

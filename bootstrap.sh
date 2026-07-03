@@ -72,7 +72,17 @@ echo "==> Installing Ansible into the venv"
 "$VENV/bin/pip" install --quiet --upgrade pip
 "$VENV/bin/pip" install --upgrade "ansible>=11"
 
-# 7. Run the playbook against localhost.
+# 7. Machine-local vars (gitignored): profile plus per-machine settings such
+#    as the git identity. Set up once per machine:
+#      cp local.example.yml local.yml   # then edit
+#    Absent file means the personal profile; the playbook asserts the vars
+#    that have no sensible default (git identity) and fails with a pointer
+#    to local.example.yml. Prepended so explicit -e flags still win.
+if [ -f "$REPO_DIR/local.yml" ]; then
+  set -- -e "@$REPO_DIR/local.yml" "$@"
+fi
+
+# 8. Run the playbook against localhost.
 #    vars_prompt in main.yml collects the sudo password once; it is forwarded
 #    both to become tasks and to homebrew_cask's sudo_password parameter
 #    (cask post-install symlinks that call sudo internally).

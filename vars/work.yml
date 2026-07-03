@@ -1,0 +1,6 @@
+---
+# Chrome comes preinstalled on the work machine; Brave is personal-only.
+browsers:
+  - arc
+  - ungoogled-chromium
+  - firefox@developer-edition

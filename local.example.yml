@@ -1,0 +1,13 @@
+---
+# Machine-local settings — local.yml is gitignored, this example is tracked.
+# Set up a new machine once:
+#   cp local.example.yml local.yml
+# then edit the values below and run ./bootstrap.sh.
+
+# Which vars/<profile>.yml to apply: personal | work
+profile: personal
+
+# Git identity for this machine, written to ~/.gitconfig.local by
+# tasks/git.yml (the stowed .gitconfig includes that file).
+git_user_name: Your Name
+git_user_email: you@example.com

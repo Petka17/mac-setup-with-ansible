@@ -7,6 +7,15 @@
       - gh
     state: latest
 
+- name: Write git identity from machine-local vars (local.yml)
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.gitconfig.local"
+    content: |
+      [user]
+        name = {{ git_user_name }}
+        email = {{ git_user_email }}
+    mode: "0644"
+
 - name: Stow git dotfiles
   # --restow, no creates guard: with --no-folding each file gets its own
   # symlink, so files added to the package later would never be linked if the

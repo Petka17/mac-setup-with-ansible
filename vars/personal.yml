@@ -1,0 +1,7 @@
+---
+browsers:
+  - arc
+  - brave-browser
+  - ungoogled-chromium
+  - google-chrome
+  - firefox@developer-edition

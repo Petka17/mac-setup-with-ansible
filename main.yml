@@ -7,6 +7,12 @@
   vars:
     homebrew_prefix: /opt/homebrew
     ansible_become_password: "{{ sudo_password }}"
+    # personal | work — overridden by the gitignored local.yml, which
+    # bootstrap.sh passes via `-e @local.yml`.
+    profile: personal
+
+  vars_files:
+    - "vars/{{ profile }}.yml"
 
   vars_prompt:
     - name: sudo_password
@@ -15,6 +21,20 @@
 
   environment:
     PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+
+  pre_tasks:
+    # always: without it, --tags runs would skip this untagged check.
+    - name: Check machine-local vars
+      tags: [always]
+      ansible.builtin.assert:
+        that:
+          - git_user_name is defined
+          - git_user_email is defined
+        fail_msg: >-
+          Machine-local vars are missing — create local.yml
+          (cp local.example.yml local.yml), fill in your git identity,
+          and re-run.
+        quiet: true
 
   tasks:
     - name: macOS preferences
@@ -72,14 +92,17 @@
     - name: Pass utilities
       ansible.builtin.import_tasks: tasks/pass.yml
       tags: [pass]
+      when: profile == 'personal'
 
     - name: skhd
       ansible.builtin.import_tasks: tasks/skhd.yml
       tags: [skhd]
+      when: profile == 'personal'
 
     - name: Ledger
       ansible.builtin.import_tasks: tasks/ledger.yml
       tags: [ledger]
+      when: profile == 'personal'
 
     - name: Claude Code
       ansible.builtin.import_tasks: tasks/claude-code.yml
@@ -92,10 +115,12 @@
     - name: Grok Build
       ansible.builtin.import_tasks: tasks/grok.yml
       tags: [grok]
+      when: profile == 'personal'
 
     - name: VeraCrypt
       ansible.builtin.import_tasks: tasks/veracrypt.yml
       tags: [veracrypt]
+      when: profile == 'personal'
 
     - name: Docker
       ansible.builtin.import_tasks: tasks/docker.yml
@@ -104,6 +129,7 @@
     - name: AWS CLI
       ansible.builtin.import_tasks: tasks/aws.yml
       tags: [aws]
+      when: profile == 'personal'
 
     - name: Browsers
       ansible.builtin.import_tasks: tasks/browsers.yml
@@ -112,6 +138,7 @@
     - name: Mac Apps
       ansible.builtin.import_tasks: tasks/mac_apps.yml
       tags: [mac_apps]
+      when: profile == 'personal'
 
     - name: Cleanup
       ansible.builtin.import_tasks: tasks/cleanup.yml
