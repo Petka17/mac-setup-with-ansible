@@ -23,9 +23,12 @@
   # interactive shell has activated mise. No `creates` guard: @latest is
   # re-resolved on every run so the binary tracks new releases; `go install`
   # itself is cheap when nothing changed (module cache hit, no rebuild).
+  # personal only: only useful alongside hledger/ledger journals, which are
+  # installed on the personal profile (tasks/ledger.yml).
   ansible.builtin.command:
     cmd: mise exec -- go install github.com/juev/hledger-lsp/cmd/hledger-lsp@latest
   changed_when: false
+  when: profile == 'personal'
   environment:
     GOBIN: "{{ ansible_env.HOME }}/.local/bin"
 
