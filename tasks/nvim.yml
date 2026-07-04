@@ -1,22 +1,16 @@
 ---
-- name: Install tree-sitter CLI
-  # nvim-treesitter's main branch compiles parsers via the CLI. The `tree-sitter`
-  # formula is only the library (libtree-sitter); the binary lives in `tree-sitter-cli`.
+- name: Install Neovim build dependencies
+  # tree-sitter-cli — nvim-treesitter's main branch compiles parsers via the
+  #   CLI. The `tree-sitter` formula is only the library (libtree-sitter); the
+  #   binary lives in `tree-sitter-cli`.
+  # luarocks — Mason installs luacheck (a Lua rock) via `luarocks install`.
+  #   Without luarocks (and the Lua interpreter it depends on) it fails ENOENT.
+  # wget — used by some Mason installers.
   community.general.homebrew:
-    name: tree-sitter-cli
-    state: latest
-
-- name: Install luarocks
-  # Mason installs luacheck (a Lua rock) via `luarocks install`. Without luarocks
-  # (and the Lua interpreter it depends on) the install fails with ENOENT.
-  community.general.homebrew:
-    name: luarocks
-    state: latest
-
-- name: Install wget
-  # Mason installs uses wget
-  community.general.homebrew:
-    name: wget
+    name:
+      - tree-sitter-cli
+      - luarocks
+      - wget
     state: latest
 
 - name: Install hledger-lsp
