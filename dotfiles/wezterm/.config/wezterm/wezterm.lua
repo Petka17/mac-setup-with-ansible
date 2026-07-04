@@ -31,24 +31,21 @@ end
 -- foreground program (Claude Code, dev servers, nvim) and even before any tmux
 -- session exists.
 --   * inside tmux -> send the prefix chord so tmux's display-popup renders over
---                    whatever is in the pane (see `bind C-f`/`bind C-g` below)
+--                    whatever is in the pane (see `bind C-f` in tmux.conf)
 --   * otherwise   -> type the command at the shell; `sesh connect` attaches
-local function sesh_picker(mode)
+local function sesh_picker()
   return wezterm.action_callback(function(window, pane)
     if in_tmux(pane) then
-      local key = mode == 'sessions' and 'g' or 'f'
       window:perform_action(act.SendKey { key = 'a', mods = 'CTRL' }, pane)
-      window:perform_action(act.SendKey { key = key, mods = 'CTRL' }, pane)
+      window:perform_action(act.SendKey { key = 'f', mods = 'CTRL' }, pane)
     else
-      local cmd = mode == 'sessions' and 'sesh-picker.sh sessions' or 'sesh-picker.sh'
-      window:perform_action(act.SendString(cmd .. '\n'), pane)
+      window:perform_action(act.SendString 'sesh-picker.sh\n', pane)
     end
   end)
 end
 
 config.keys = {
-  { key = 'f', mods = 'CTRL', action = sesh_picker 'all' },
-  { key = 'g', mods = 'CTRL', action = sesh_picker 'sessions' },
+  { key = 'f', mods = 'CTRL', action = sesh_picker() },
 }
 
 return config

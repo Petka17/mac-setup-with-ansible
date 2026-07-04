@@ -1,11 +1,19 @@
 # sesh — smart tmux session manager. https://github.com/joshmedeski/sesh
 #
-# Repos are discovered automatically from zoxide (they land in the DB the first
-# time you `cd`/`z` into them). Only pin destinations here that aren't reliably
-# in zoxide — non-repo dirs you want in the picker unconditionally.
+# The picker list is built by sesh-picker.sh, which scans ~/code/*/* and adds a
+# few pinned paths (see EXTRA_DIRS in that script) — not zoxide history. The
+# [[wildcard]] below is what makes a path-based `sesh connect` open the project
+# window layout, so keep it in sync with that scan pattern.
 
 [default_session]
 preview_command = "eza --all --git --icons --color=always {}"
+
+# Dedicated ungit session — just runs the git UI; its working dir is irrelevant.
+# The picker lists this via `sesh list -c` and connects by name.
+[[session]]
+name = "ungit"
+path = "~"
+startup_command = "ungit --no-b"
 
 [[wildcard]]
 pattern = "~/code/*/*"
