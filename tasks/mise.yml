@@ -4,11 +4,6 @@
     name: mise
     state: latest
 
-- name: Remove standalone mise bootstrap binary
-  ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.local/bin/mise"
-    state: absent
-
 - name: Stow mise dotfiles
   # No --no-folding: fold into a single ~/.config/mise symlink so new repo
   # files appear automatically. Safe because mise keeps runtime state in

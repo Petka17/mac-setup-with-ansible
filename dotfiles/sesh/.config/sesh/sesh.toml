@@ -7,11 +7,24 @@
 [default_session]
 preview_command = "eza --all --git --icons --color=always {}"
 
-[[session]]
-name = "ledger"
-path = "~/.m/.ledger"
+[[wildcard]]
+pattern = "~/code/*/*"
+startup_command = "tmux select-window -t editor && exit"
+windows = ["editor", "term", "server", "tests", "agent"]
 
-# Obsidian notes (iCloud). Uncomment on machines where this path is synced:
-# [[session]]
-# name = "notes"
-# path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
+[[window]]
+name = "editor"
+startup_script = "nvim"
+
+[[window]]
+name = "term"
+
+[[window]]
+name = "server"
+
+[[window]]
+name = "tests"
+
+[[window]]
+name = "agent"
+startup_script = "claude"
