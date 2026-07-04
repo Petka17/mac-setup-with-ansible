@@ -23,6 +23,20 @@
     PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
 
   pre_tasks:
+    # Fails fast on a mistyped password instead of minutes later at the first
+    # become task. On a fresh machine it also consumes sudo's first-run
+    # "lecture" banner, which otherwise lands in front of the password prompt
+    # and breaks Ansible's become prompt detection (the mkcert task then dies
+    # with "Timeout waiting for privilege escalation prompt"). -k forces sudo
+    # to really verify the password rather than trust a cached timestamp.
+    - name: Validate sudo password
+      tags: [always]
+      ansible.builtin.command: sudo -k -S -p '' -v
+      args:
+        stdin: "{{ sudo_password }}"
+      changed_when: false
+      no_log: true
+
     # always: without it, --tags runs would skip this untagged check.
     - name: Check machine-local vars
       tags: [always]
