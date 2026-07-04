@@ -7,14 +7,17 @@
     state: latest
 
 - name: Stow sesh dotfiles
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} sesh
-    creates: "{{ ansible_env.HOME }}/.config/sesh/sesh.toml"
+  # fold: sesh keeps no runtime state in ~/.config/sesh.
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: sesh
+    stow_mode: fold
+    stow_creates: "{{ ansible_env.HOME }}/.config/sesh/sesh.toml"
 
 - name: Stow tmux dotfiles
-  # No --no-folding: fold into a single ~/.config/tmux symlink so new repo
-  # files appear automatically. Safe because tmux keeps no runtime state in
-  # ~/.config/tmux.
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} tmux
-    creates: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf"
+  # fold: tmux keeps no runtime state in ~/.config/tmux.
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: tmux
+    stow_mode: fold
+    stow_creates: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf"

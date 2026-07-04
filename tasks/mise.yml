@@ -5,12 +5,13 @@
     state: latest
 
 - name: Stow mise dotfiles
-  # No --no-folding: fold into a single ~/.config/mise symlink so new repo
-  # files appear automatically. Safe because mise keeps runtime state in
-  # ~/.local/share/mise and ~/.cache/mise, not ~/.config/mise.
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} mise
-    creates: "{{ ansible_env.HOME }}/.config/mise/config.toml"
+  # fold: mise keeps runtime state in ~/.local/share/mise and ~/.cache/mise,
+  # not ~/.config/mise, so a single folded symlink is safe.
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: mise
+    stow_mode: fold
+    stow_creates: "{{ ansible_env.HOME }}/.config/mise/config.toml"
 
 - name: Install mise tools
   ansible.builtin.command:

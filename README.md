@@ -119,9 +119,22 @@ dotfiles/
             └── config.toml
 ```
 
-The directory tree inside each package mirrors `$HOME`. Running `stow -d dotfiles -t ~ --no-folding <package>` creates a symlink for each file into the correct location — `dotfiles/mise/.config/mise/config.toml` becomes `~/.config/mise/config.toml`.
+The directory tree inside each package mirrors `$HOME`. Stowing a package creates a symlink for each file into the correct location — `dotfiles/mise/.config/mise/config.toml` becomes `~/.config/mise/config.toml`.
 
-To add a new tool's config: create `dotfiles/<tool>/<path-relative-to-home>/...` and add a stow task to the relevant task file.
+Each task file links its package through the shared `tasks/stow.yml` helper rather than calling `stow` directly, so linking behaves the same everywhere:
+
+```yaml
+- name: Stow mise dotfiles
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: mise
+    stow_mode: fold        # fold | restow | seed
+    stow_creates: "{{ ansible_env.HOME }}/.config/mise/config.toml"   # fold/seed only
+```
+
+The three modes (`fold`, `restow`, `seed`) and when to pick each are documented at the top of `tasks/stow.yml`.
+
+To add a new tool's config: create `dotfiles/<tool>/<path-relative-to-home>/...` and add a `stow.yml` import to the relevant task file.
 
 ## Manual steps
 

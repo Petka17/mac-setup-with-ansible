@@ -18,13 +18,13 @@
     state: latest
 
 - name: Stow docker dotfiles
-  # Seeds ~/.docker/config.json with cliPluginsExtraDirs so the brew-installed
-  # compose/buildx plugins are found. Unlike the other stow packages this one
-  # is seed-only (`creates` guard, no --restow): docker itself rewrites
+  # seed: seeds ~/.docker/config.json with cliPluginsExtraDirs so the
+  # brew-installed compose/buildx plugins are found. Docker itself rewrites
   # config.json (`docker login`, context switches by `colima start`) and
   # replaces the symlink with a regular file — that's expected, and restowing
-  # would then fail with a conflict. --no-folding because ~/.docker also holds
-  # runtime state (contexts/, buildx/) that must not land in the repo.
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding docker
-    creates: "{{ ansible_env.HOME }}/.docker/config.json"
+  # would then conflict, so this links once and is never touched again.
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: docker
+    stow_mode: seed
+    stow_creates: "{{ ansible_env.HOME }}/.docker/config.json"
