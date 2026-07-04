@@ -51,6 +51,11 @@ The tag for each area is listed next to its `import_tasks` line in `main.yml`.
 
 Run with no tags to do everything. Re-running is safe — every task is idempotent.
 
+Tag subsets are for **updating an already-provisioned machine**. A fresh machine
+must do a full run first (`./bootstrap.sh` with no tags): tagged areas assume the
+base layer is already in place — `stow` from the `term` tag, `neovim` and the Go
+toolchain from `mise` — so something like `--tags nvim` on a bare machine fails.
+
 The sudo password is prompted on **every** run, even for tag subsets that never
 escalate — `vars_prompt` in `main.yml` runs before Ansible knows which tasks are
 selected. Just enter it; only tasks that actually need root use it.
