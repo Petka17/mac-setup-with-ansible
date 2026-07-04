@@ -45,10 +45,20 @@ session_name() {
   printf '%s' "${s//:/_}"
 }
 
-# Create-or-switch a tmux session ($1) rooted at path ($2). Always called
-# from inside tmux, so switch-client (not attach) is the right move.
+# Create-or-switch a tmux session ($1) rooted at path ($2). Creation goes
+# through sesh so the sesh.toml wildcard template builds the windows; sesh
+# names the session after the directory basename, so rename it to our
+# collision-free "<repo>/<branch>" right after (found via its start path).
 connect() {
-  tmux has-session -t "=$1" 2> /dev/null || tmux new-session -ds "$1" -c "$2"
+  local sesh_name
+  if ! tmux has-session -t "=$1" 2> /dev/null; then
+    sesh connect "$2"
+    sesh_name=$(tmux list-sessions -F $'#{session_name}\t#{session_path}' \
+      | awk -F'\t' -v p="$2" '$2 == p { print $1; exit }')
+    if [ -n "$sesh_name" ] && [ "$sesh_name" != "$1" ]; then
+      tmux rename-session -t "=$sesh_name" "$1"
+    fi
+  fi
   tmux switch-client -t "=$1"
 }
 

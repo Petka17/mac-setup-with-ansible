@@ -20,6 +20,13 @@ pattern = "~/code/*/*"
 startup_command = "tmux select-window -t editor && exit"
 windows = ["editor", "term", "server", "tests", "agent"]
 
+# Worktrees (see worktree-picker.sh) are one level deeper than the pattern
+# above; same layout. The script renames the session right after creation.
+[[wildcard]]
+pattern = "~/code/*/*.worktrees/*"
+startup_command = "tmux select-window -t editor && exit"
+windows = ["editor", "term", "server", "tests", "agent"]
+
 [[window]]
 name = "editor"
 startup_script = "nvim"
