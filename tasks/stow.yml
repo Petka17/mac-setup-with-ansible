@@ -1,0 +1,33 @@
+---
+# Reusable GNU Stow step. Imported statically (so --tags still reaches it) by
+# each tool's task file. Callers set:
+#   stow_package  — dotfiles package name (a directory under dotfiles/)
+#   stow_mode     — fold | restow | seed
+#   stow_creates  — sentinel path; required for fold and seed, unused for restow
+#
+# The mode captures how a package must be linked:
+#
+#   fold    Let stow fold the package into a single ~/.config/<pkg> symlink, so
+#           files added to the repo later appear without re-stowing. Guarded by
+#           `creates`. Use only when the tool keeps no runtime state under the
+#           folded directory. (mise, wezterm, tmux, sesh, nvim)
+#
+#   restow  --no-folding --restow: one symlink per file, re-linked every run so
+#           new files are always picked up. A `creates` guard can't work here (it
+#           would freeze the package after the first file is linked), so
+#           changed_when is false. (zsh, scripts, starship, git, gnupg, skhd,
+#           claude-code, opencode, grok)
+#
+#   seed    --no-folding, no --restow: link once, then never touch — the tool
+#           rewrites the file in place and re-stowing would conflict. Guarded by
+#           `creates`. (docker)
+
+- name: "Stow dotfiles package {{ stow_package }}"
+  ansible.builtin.command:
+    cmd: >-
+      stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }}
+      {{ '--no-folding --restow' if stow_mode == 'restow'
+         else '--no-folding' if stow_mode == 'seed' else '' }}
+      {{ stow_package }}
+    creates: "{{ stow_creates if stow_mode != 'restow' else omit }}"
+  changed_when: stow_mode != 'restow'

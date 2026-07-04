@@ -3,10 +3,13 @@
   # pkg-installer cask: the installer calls sudo internally, so pass the
   # playbook's sudo password like mac_apps.yml does — otherwise the first
   # install hangs at a sudo prompt Ansible can't answer.
+  # greedy: let brew own updates for casks that mark themselves auto_updates
+  # (see tasks/browsers.yml) so cask handling stays uniform.
   community.general.homebrew_cask:
     name: veracrypt-fuse-t
     state: latest
     sudo_password: "{{ sudo_password }}"
+    greedy: true
 
 - name: Ensure ~/.m exists
   ansible.builtin.file:

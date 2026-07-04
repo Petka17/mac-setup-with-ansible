@@ -6,6 +6,7 @@
     mode: "0755"
 
 - name: Stow custom scripts
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow scripts
-  changed_when: false
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: scripts
+    stow_mode: restow

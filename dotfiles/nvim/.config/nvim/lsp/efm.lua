@@ -33,14 +33,15 @@ local shfmt = {
   formatStdin = true,
 }
 
--- prettier formats the markup filetypes (json/jsonc/yaml/css/scss/html/
--- markdown) through efm. Gated on a prettier config being found upward via
+-- prettier formats the markup filetypes (json/jsonc/yaml/css/scss/less/html)
+-- through efm. Gated on a prettier config being found upward via
 -- rootMarkers, so a project only gets prettier when it opts in (same
 -- config-gated philosophy as the JS/TS pipeline in lua/lsp/ts_format.lua). We do
 -- NOT wire prettier for js/ts here — that path is owned by ts_format.lua, which
 -- short-circuits the format resolver, so an efm entry would be dead weight and
--- make efm attach to every TS buffer needlessly. `${INPUT}` is efm's template
--- for the real filename, letting prettier pick a parser.
+-- make efm attach to every TS buffer needlessly. Markdown has its own entry
+-- (prettier_md below). `${INPUT}` is efm's template for the real filename,
+-- letting prettier pick a parser.
 local prettier = {
   formatCommand = 'prettier --stdin-filepath "${INPUT}"',
   formatStdin = true,
@@ -58,6 +59,20 @@ local prettier = {
     "prettier.config.mjs",
     "prettier.config.ts",
   },
+}
+
+-- Markdown gets its own prettier entry: ungated (no rootMarkers) and with
+-- --prose-wrap never, so format-on-save reflows each paragraph back onto one
+-- line instead of keeping authored mid-sentence breaks (prettier's default
+-- proseWrap "preserve"). Unlike the config-gated `prettier` above, this runs on
+-- EVERY markdown buffer — there's no per-project prettier config to opt into for
+-- personal notes/READMEs, and unwrapping is the wanted default. Intentional
+-- breaks survive: prettier keeps markdown hard breaks (trailing "  " or "\") and
+-- never reflows code fences. --prose-wrap is a CLI flag, so it overrides any
+-- proseWrap a project sets in its own prettier config.
+local prettier_md = {
+  formatCommand = 'prettier --prose-wrap never --stdin-filepath "${INPUT}"',
+  formatStdin = true,
 }
 
 -- markdownlint (markdownlint-cli) lints markdown from stdin. It writes its
@@ -160,7 +175,7 @@ return {
       scss = { prettier },
       less = { prettier },
       html = { prettier },
-      markdown = { prettier, markdownlint },
+      markdown = { prettier_md, markdownlint },
       http = { kulala_fmt },
       sql = { sql_formatter },
     },

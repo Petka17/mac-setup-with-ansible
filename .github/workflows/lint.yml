@@ -25,6 +25,20 @@ jobs:
       - name: Install linters
         run: pip install "ansible>=11" ansible-lint yamllint
 
+      # The non-Ansible linters come from mise (the same toolchain used on the
+      # machines this repo provisions). Declared inline so CI stays self-contained
+      # and these dev tools don't leak into a local `cd`-into-repo mise session.
+      # selene lives under mise's aqua backend (no short name in the registry).
+      - uses: jdx/mise-action@v2
+        with:
+          mise_toml: |
+            [tools]
+            shellcheck = "latest"
+            shfmt = "latest"
+            stylua = "latest"
+            taplo = "latest"
+            "aqua:Kampfkarren/selene" = "latest"
+
       - name: yamllint
         run: yamllint main.yml local.example.yml tasks/ vars/ .github/
 
@@ -33,3 +47,29 @@ jobs:
 
       - name: Playbook syntax check
         run: ansible-playbook --syntax-check main.yml
+
+      # Shell, Lua (Neovim config) and TOML checks. Targets come from `git
+      # ls-files` so the gitignored `.ansible/` venv (which vendors thousands of
+      # its own scripts/tomls) is never in scope. Flags mirror the local
+      # efm-langserver / bash-language-server setup in dotfiles/nvim so CI and
+      # editor agree; stylua/selene run from the nvim config dir to pick up their
+      # .stylua.toml / selene.toml (and selene's neovim.yml std).
+      - name: shellcheck
+        run: git ls-files '*.sh' | xargs shellcheck
+
+      - name: shfmt (format check)
+        run: git ls-files '*.sh' | xargs shfmt -d -i 2 -ci -bn -sr -s
+
+      - name: stylua (format check)
+        working-directory: dotfiles/nvim/.config/nvim
+        run: stylua --check .
+
+      - name: selene (Lua lint)
+        working-directory: dotfiles/nvim/.config/nvim
+        run: selene .
+
+      - name: taplo (format check)
+        run: git ls-files '*.toml' | xargs taplo fmt --check --diff
+
+      - name: taplo (lint)
+        run: git ls-files '*.toml' | xargs taplo lint

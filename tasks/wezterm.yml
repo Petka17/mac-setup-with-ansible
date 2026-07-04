@@ -1,13 +1,17 @@
 ---
 - name: Install WezTerm
+  # greedy: let brew own updates for casks that mark themselves auto_updates
+  # (see tasks/browsers.yml) so cask handling stays uniform.
   community.general.homebrew_cask:
     name: wezterm
     state: latest
+    greedy: true
 
 - name: Stow wezterm dotfiles
-  # No --no-folding: fold into a single ~/.config/wezterm symlink so new repo
-  # files appear automatically. Safe because wezterm keeps no runtime state in
-  # ~/.config/wezterm.
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} wezterm
-    creates: "{{ ansible_env.HOME }}/.config/wezterm/wezterm.lua"
+  # fold: wezterm keeps no runtime state in ~/.config/wezterm, so a single
+  # folded symlink is safe.
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: wezterm
+    stow_mode: fold
+    stow_creates: "{{ ansible_env.HOME }}/.config/wezterm/wezterm.lua"

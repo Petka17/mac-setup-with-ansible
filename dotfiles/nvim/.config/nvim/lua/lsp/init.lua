@@ -29,6 +29,7 @@ require("packages.mason").ensure(
   "css-lsp",
   "yaml-language-server",
   "lemminx",
+  "taplo",
   "markdownlint",
   "basedpyright",
   "ruff",
@@ -274,12 +275,15 @@ enable("oxlint", "eslint")
 -- No formatter is registered — format-on-save's pipeline owns JS/TS formatting.
 enable("biome")
 
--- Markup (markdown/json/html/css/yaml/xml). marksman/jsonls/html/cssls/
+-- Markup (markdown/json/html/css/yaml/xml/toml). marksman/jsonls/html/cssls/
 -- yamlls provide LSP features; efm (prettier, registered above) formats them and
 -- lints markdown via markdownlint. lemminx is the only XML formatter, so it's
--- registered.
+-- registered. taplo owns TOML end to end — its LSP supplies both diagnostics
+-- (syntax + schema validation) and formatting, so it's registered too (prettier
+-- has no TOML support, so there's nothing to defer to efm for).
 format.register("lemminx", 100)
-enable("marksman", "jsonls", "html", "cssls", "yamlls", "lemminx")
+format.register("taplo", 100)
+enable("marksman", "jsonls", "html", "cssls", "yamlls", "lemminx", "taplo")
 
 -- Python. basedpyright provides language intelligence with its own
 -- formatting disabled (see lsp/basedpyright.lua); ruff owns lint + format +

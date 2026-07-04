@@ -41,7 +41,12 @@ detect_files = ["package.json", ".nvmrc", ".node-version"]
 [python]
 symbol = " "
 style = "bold yellow"
-detect_files = ["pyproject.toml", "requirements.txt", "setup.py", ".python-version"]
+detect_files = [
+  "pyproject.toml",
+  "requirements.txt",
+  "setup.py",
+  ".python-version",
+]
 
 [rust]
 symbol = " "

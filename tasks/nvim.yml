@@ -1,22 +1,16 @@
 ---
-- name: Install tree-sitter CLI
-  # nvim-treesitter's main branch compiles parsers via the CLI. The `tree-sitter`
-  # formula is only the library (libtree-sitter); the binary lives in `tree-sitter-cli`.
+- name: Install Neovim build dependencies
+  # tree-sitter-cli — nvim-treesitter's main branch compiles parsers via the
+  #   CLI. The `tree-sitter` formula is only the library (libtree-sitter); the
+  #   binary lives in `tree-sitter-cli`.
+  # luarocks — Mason installs luacheck (a Lua rock) via `luarocks install`.
+  #   Without luarocks (and the Lua interpreter it depends on) it fails ENOENT.
+  # wget — used by some Mason installers.
   community.general.homebrew:
-    name: tree-sitter-cli
-    state: latest
-
-- name: Install luarocks
-  # Mason installs luacheck (a Lua rock) via `luarocks install`. Without luarocks
-  # (and the Lua interpreter it depends on) the install fails with ENOENT.
-  community.general.homebrew:
-    name: luarocks
-    state: latest
-
-- name: Install wget
-  # Mason installs uses wget
-  community.general.homebrew:
-    name: wget
+    name:
+      - tree-sitter-cli
+      - luarocks
+      - wget
     state: latest
 
 - name: Install hledger-lsp
@@ -29,18 +23,20 @@
   # interactive shell has activated mise. No `creates` guard: @latest is
   # re-resolved on every run so the binary tracks new releases; `go install`
   # itself is cheap when nothing changed (module cache hit, no rebuild).
+  # personal only: only useful alongside hledger/ledger journals, which are
+  # installed on the personal profile (tasks/ledger.yml).
   ansible.builtin.command:
     cmd: mise exec -- go install github.com/juev/hledger-lsp/cmd/hledger-lsp@latest
   changed_when: false
+  when: profile == 'personal'
   environment:
     GOBIN: "{{ ansible_env.HOME }}/.local/bin"
 
 - name: Stow nvim dotfiles
-  # No --no-folding: let stow fold the whole package into a single
-  # `~/.config/nvim` symlink so files added to the repo later appear
-  # automatically (with --no-folding each file is linked individually and new
-  # ones are missed until a re-stow). Safe for nvim because it keeps runtime
-  # state in ~/.local/share/nvim and ~/.local/state/nvim, not ~/.config/nvim.
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} nvim
-    creates: "{{ ansible_env.HOME }}/.config/nvim/init.lua"
+  # fold: nvim keeps runtime state in ~/.local/share/nvim and
+  # ~/.local/state/nvim, not ~/.config/nvim, so a single folded symlink is safe.
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: nvim
+    stow_mode: fold
+    stow_creates: "{{ ansible_env.HOME }}/.config/nvim/init.lua"

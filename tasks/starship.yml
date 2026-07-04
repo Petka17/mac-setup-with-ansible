@@ -5,9 +5,7 @@
     state: latest
 
 - name: Stow starship dotfiles
-  # --restow, no creates guard: with --no-folding each file gets its own
-  # symlink, so files added to the package later would never be linked if the
-  # task stopped running once a sentinel file existed.
-  ansible.builtin.command:
-    cmd: stow -d {{ playbook_dir }}/dotfiles -t {{ ansible_env.HOME }} --no-folding --restow starship
-  changed_when: false
+  ansible.builtin.import_tasks: stow.yml
+  vars:
+    stow_package: starship
+    stow_mode: restow
