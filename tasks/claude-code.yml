@@ -1,10 +1,14 @@
 ---
 - name: Install Claude Code
+  # greedy: the `claude` desktop cask marks itself auto_updates, which
+  # `brew upgrade` skips by default — so `state: latest` alone would never
+  # update it (see tasks/browsers.yml). greedy makes brew own the update.
   community.general.homebrew_cask:
     name:
       - claude-code
       - claude
     state: latest
+    greedy: true
 
 - name: Stow claude-code dotfiles
   # --restow, no creates guard: with --no-folding each file gets its own

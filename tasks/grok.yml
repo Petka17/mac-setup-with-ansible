@@ -1,8 +1,11 @@
 ---
 - name: Install Grok Build
+  # greedy: let brew own updates for casks that mark themselves auto_updates
+  # (see tasks/browsers.yml) so cask handling stays uniform.
   community.general.homebrew_cask:
     name: grok-build
     state: latest
+    greedy: true
 
 - name: Stow grok dotfiles
   # --restow, no creates guard: with --no-folding each file gets its own
