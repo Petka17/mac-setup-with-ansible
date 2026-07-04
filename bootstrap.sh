@@ -22,7 +22,7 @@ BREW="$BREW_PREFIX/bin/brew"
 MISE="$BREW_PREFIX/bin/mise"
 
 # 1. Verify Command Line Tools (they provide /usr/bin/python3, git, curl).
-if ! /usr/bin/xcode-select -p >/dev/null 2>&1; then
+if ! /usr/bin/xcode-select -p > /dev/null 2>&1; then
   echo "error: Xcode Command Line Tools not found." >&2
   echo "       Run this first, then re-run bootstrap:" >&2
   echo "         xcode-select --install" >&2

@@ -51,37 +51,23 @@ The tag for each area is listed next to its `import_tasks` line in `main.yml`.
 
 Run with no tags to do everything. Re-running is safe — every task is idempotent.
 
-Tag subsets are for **updating an already-provisioned machine**. A fresh machine
-must do a full run first (`./bootstrap.sh` with no tags): tagged areas assume the
-base layer is already in place — `stow` from the `term` tag, `neovim` and the Go
-toolchain from `mise` — so something like `--tags nvim` on a bare machine fails.
+Tag subsets are for **updating an already-provisioned machine**. A fresh machine must do a full run first (`./bootstrap.sh` with no tags): tagged areas assume the base layer is already in place — `stow` from the `term` tag, `neovim` and the Go toolchain from `mise` — so something like `--tags nvim` on a bare machine fails.
 
-The sudo password is prompted on **every** run, even for tag subsets that never
-escalate — `vars_prompt` in `main.yml` runs before Ansible knows which tasks are
-selected. Just enter it; only tasks that actually need root use it.
+The sudo password is prompted on **every** run, even for tag subsets that never escalate — `vars_prompt` in `main.yml` runs before Ansible knows which tasks are selected. Just enter it; only tasks that actually need root use it.
 
 You can also pass any other `ansible-playbook` flag straight through, e.g. `./bootstrap.sh --check` for a dry run.
 
 ## Machine profiles & local vars
 
-Two profiles exist: `personal` (the default) and `work`. The work profile skips
-personal-only areas (pass/gnupg, skhd, ledger, grok, veracrypt, aws, mac_apps)
-and installs a smaller browser set. Profile-scoped lists live in the committed
-`vars/personal.yml` and `vars/work.yml`.
+Two profiles exist: `personal` (the default) and `work`. The work profile skips personal-only areas (pass/gnupg, skhd, ledger, grok, veracrypt, aws, mac_apps) and installs a smaller browser set. Profile-scoped lists live in the committed `vars/personal.yml` and `vars/work.yml`.
 
-Machine-scoped settings — which profile this box runs, plus your git identity
-(written to `~/.gitconfig.local`, which the stowed `.gitconfig` includes) —
-live in a gitignored `local.yml`. Once per machine, after cloning:
+Machine-scoped settings — which profile this box runs, plus your git identity (written to `~/.gitconfig.local`, which the stowed `.gitconfig` includes) — live in a gitignored `local.yml`. Once per machine, after cloning:
 
 ```bash
 cp local.example.yml local.yml   # then edit profile + git identity
 ```
 
-`bootstrap.sh` passes the file on every run, so the choice can't be forgotten
-on re-runs. Without a `local.yml` the playbook fails fast with a pointer to
-`local.example.yml` — the git identity has no sensible default. To skip an
-area on the work profile, add `when: profile == 'personal'` to its
-`import_tasks` line in `main.yml`.
+`bootstrap.sh` passes the file on every run, so the choice can't be forgotten on re-runs. Without a `local.yml` the playbook fails fast with a pointer to `local.example.yml` — the git identity has no sensible default. To skip an area on the work profile, add `when: profile == 'personal'` to its `import_tasks` line in `main.yml`.
 
 ## Layout
 
@@ -107,6 +93,37 @@ To add a new area: drop a `tasks/<name>.yml` with its package list inline, and a
 
 Each task file holds its own package list inline — to add or remove a package, edit the relevant `tasks/<name>.yml`. The lists shipped here are sensible starting points — trim and extend to taste.
 
+## Linting & formatting
+
+`.github/workflows/lint.yml` checks the shell scripts, the Neovim Lua config, and the TOML files on every push and PR. The same checks run locally with the tools Mason already installs for Neovim (`selene`, `shellcheck`, `shfmt`, `stylua`; `taplo` needs a one-off `:MasonInstall taplo`). Put Mason's bin on `PATH` for the shell, then run the commands from the repo root:
+
+```bash
+export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+```
+
+Check (exactly what CI runs — flags mirror the editor's efm/bashls setup):
+
+```bash
+# Shell
+git ls-files '*.sh' | xargs shellcheck
+git ls-files '*.sh' | xargs shfmt -d -i 2 -ci -bn -sr -s
+
+# Lua (run from the Neovim config so its .stylua.toml / selene.toml apply)
+( cd dotfiles/nvim/.config/nvim && stylua --check . && selene . )
+
+# TOML
+git ls-files '*.toml' | xargs taplo fmt --check --diff
+git ls-files '*.toml' | xargs taplo lint
+```
+
+Apply formatting in place (`shellcheck` and `selene` are linters only — no autofix):
+
+```bash
+git ls-files '*.sh' | xargs shfmt -w -i 2 -ci -bn -sr -s
+( cd dotfiles/nvim/.config/nvim && stylua . )
+git ls-files '*.toml' | xargs taplo fmt
+```
+
 ## Dotfiles
 
 Configuration files are managed with [GNU Stow](https://www.gnu.org/software/stow/). Stow is installed by `tasks/terminal.yml` before any task that needs it.
@@ -128,8 +145,8 @@ Each task file links its package through the shared `tasks/stow.yml` helper rath
   ansible.builtin.import_tasks: stow.yml
   vars:
     stow_package: mise
-    stow_mode: fold        # fold | restow | seed
-    stow_creates: "{{ ansible_env.HOME }}/.config/mise/config.toml"   # fold/seed only
+    stow_mode: fold # fold | restow | seed
+    stow_creates: "{{ ansible_env.HOME }}/.config/mise/config.toml" # fold/seed only
 ```
 
 The three modes (`fold`, `restow`, `seed`) and when to pick each are documented at the top of `tasks/stow.yml`.

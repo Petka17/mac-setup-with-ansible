@@ -10,8 +10,8 @@ dmenu="/opt/homebrew/bin/choose"
 copy="pbcopy"
 
 prefix=${PASSWORD_STORE_DIR:-$HOME/.password-store}
-password_files=$(find "$prefix" -mindepth 1 -name '.*' -prune -o -type f -name '*.gpg' -print |
-  sed -e "s|^$prefix/||" -e 's|\.gpg$||' -e 's|\.otp$||' | sort -u)
+password_files=$(find "$prefix" -mindepth 1 -name '.*' -prune -o -type f -name '*.gpg' -print \
+  | sed -e "s|^$prefix/||" -e 's|\.gpg$||' -e 's|\.otp$||' | sort -u)
 password=$(printf '%s\n' "$password_files" | $dmenu)
 
 [[ -n $password ]] || exit
