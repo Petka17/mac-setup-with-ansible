@@ -12,7 +12,7 @@ HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
 
-export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem" 
+export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
 
 # VeraCrypt
 alias vcm="veracrypt --mount --pim 0 --keyfiles \"\" --protect-hidden no"
