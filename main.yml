@@ -36,6 +36,20 @@
           and re-run.
         quiet: true
 
+    - name: Ensure ~/.config exists before any stow task runs
+      # always: this must run before the first folding stow package regardless
+      # of --tags, so it lives in pre_tasks, not a tagged task file. On a fresh
+      # machine ~/.config doesn't exist yet. GNU Stow folds at the highest level
+      # possible, so the first folding stow package (mise) would otherwise
+      # create ~/.config itself as a symlink into this repo — and until a later
+      # stow splits that fold open, anything writing to ~/.config would write
+      # into the repo. Same guard as ~/.local/bin in tasks/scripts.yml.
+      tags: [always]
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config"
+        state: directory
+        mode: "0755"
+
   tasks:
     - name: macOS preferences
       ansible.builtin.import_tasks: tasks/macos-defaults.yml
