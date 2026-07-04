@@ -16,8 +16,8 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV="${ANSIBLE_VENV:-$REPO_DIR/.ansible}"
 
-# Homebrew lands here on Apple Silicon; Intel Macs use /usr/local.
-BREW_PREFIX="$([ -d /opt/homebrew ] && echo /opt/homebrew || echo /usr/local)"
+# Apple Silicon only — Homebrew lives at /opt/homebrew.
+BREW_PREFIX=/opt/homebrew
 BREW="$BREW_PREFIX/bin/brew"
 MISE="$BREW_PREFIX/bin/mise"
 
