@@ -41,6 +41,7 @@ picker_list() {
   for dir in ~/code/*/*/ "${EXTRA_DIRS[@]}"; do
     [ -d "$dir" ] || continue                  # unmatched glob / missing extra
     dir=${dir%/}                               # strip trailing slash
+    [[ $dir == *.worktrees ]] && continue      # worktrees have their own picker
     grep -qxF "$dir" <<< "$active" && continue # already an active session
     if [[ $dir == "$HOME"/code/* ]]; then
       label=${dir#"$HOME"/code/} # hide ~/code → owner/repo

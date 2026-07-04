@@ -27,25 +27,29 @@ local function in_tmux(pane)
   return scan(pane:get_foreground_process_info())
 end
 
--- sesh session picker, triggered at the terminal level so it fires over ANY
+-- Picker keybindings, triggered at the terminal level so they fire over ANY
 -- foreground program (Claude Code, dev servers, nvim) and even before any tmux
 -- session exists.
 --   * inside tmux -> send the prefix chord so tmux's display-popup renders over
---                    whatever is in the pane (see `bind C-f` in tmux.conf)
---   * otherwise   -> type the command at the shell; `sesh connect` attaches
-local function sesh_picker()
+--                    whatever is in the pane (see the matching bind in tmux.conf)
+--   * otherwise   -> type the command at the shell
+local function tmux_chord(key, fallback_cmd)
   return wezterm.action_callback(function(window, pane)
     if in_tmux(pane) then
       window:perform_action(act.SendKey { key = 'a', mods = 'CTRL' }, pane)
-      window:perform_action(act.SendKey { key = 'f', mods = 'CTRL' }, pane)
+      window:perform_action(act.SendKey { key = key, mods = 'CTRL' }, pane)
     else
-      window:perform_action(act.SendString 'sesh-picker.sh\n', pane)
+      window:perform_action(act.SendString(fallback_cmd .. '\n'), pane)
     end
   end)
 end
 
 config.keys = {
-  { key = 'f', mods = 'CTRL', action = sesh_picker() },
+  { key = 'f', mods = 'CTRL', action = tmux_chord('f', 'sesh-picker.sh') },
+  -- git worktree picker (see `bind C-g` in tmux.conf); its tmux-session
+  -- juggling assumes it runs inside tmux, hence no bare-shell shortcut beyond
+  -- typing the command.
+  { key = 'g', mods = 'CTRL', action = tmux_chord('g', 'worktree-picker.sh') },
 }
 
 return config
