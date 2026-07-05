@@ -45,6 +45,10 @@ alias lt='eza --tree --icons'
 # bat
 alias cat='bat'
 
+# Machine-local config not managed by this repo (e.g. corporate defaults
+# preserved from a pre-existing .zshrc on first provision — see tasks/zsh.yml).
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
 # zoxide — init stays at the end of this file: zoxide hooks the prompt and
 # warns (doctor) if anything else, like starship, hooks it after zoxide does.
 eval "$(zoxide init zsh)"
