@@ -40,7 +40,7 @@ jobs:
             "aqua:Kampfkarren/selene" = "latest"
 
       - name: yamllint
-        run: yamllint main.yml local.example.yml tasks/ vars/ .github/
+        run: yamllint main.yml local.example.yml inventory.yml tasks/ vars/ .github/
 
       - name: ansible-lint
         run: ansible-lint

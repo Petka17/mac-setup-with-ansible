@@ -23,11 +23,14 @@
   # interactive shell has activated mise. No `creates` guard: @latest is
   # re-resolved on every run so the binary tracks new releases; `go install`
   # itself is cheap when nothing changed (module cache hit, no rebuild).
+  # -v makes an actual build print to stderr (download + package lines) while
+  # a no-op run prints nothing — that's the changed_when signal.
   # personal only: only useful alongside hledger/ledger journals, which are
   # installed on the personal profile (tasks/ledger.yml).
   ansible.builtin.command:
-    cmd: mise exec -- go install github.com/juev/hledger-lsp/cmd/hledger-lsp@latest
-  changed_when: false
+    cmd: mise exec -- go install -v github.com/juev/hledger-lsp/cmd/hledger-lsp@latest
+  register: hledger_lsp_install
+  changed_when: hledger_lsp_install.stderr != ""
   when: profile == 'personal'
   environment:
     GOBIN: "{{ ansible_env.HOME }}/.local/bin"

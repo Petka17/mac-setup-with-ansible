@@ -16,4 +16,5 @@
       - obsidian
       - discord
     state: latest
+    greedy: true
     sudo_password: "{{ sudo_password }}"
