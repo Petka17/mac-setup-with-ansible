@@ -2,7 +2,7 @@
 
 # sesh picker. Works both inside and outside tmux: `sesh connect` attaches when
 # outside tmux and switch-clients when already inside. Lists active sessions +
-# ~/code/*/* projects + EXTRA_DIRS.
+# ~/code/*/* projects + the extra dirs from ~/.config/sesh-extra-dirs.
 #
 # The list is curated (not zoxide history): every ~/code/*/* project plus a
 # few pinned destinations, deduped against the sessions already running. Each
@@ -15,13 +15,18 @@
 
 set -e
 
-# Non-repo destinations to always offer. Add more here as needed. Quote any path
-# that contains spaces, using "$HOME" instead of ~ (tilde doesn't expand inside
-# quotes) so it stays a single array element.
-EXTRA_DIRS=(
-  ~/.m/.ledger
-  "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
-)
+# Non-repo destinations to always offer, one per line in
+# ~/.config/sesh-extra-dirs (written by tasks/tmux.yml from the
+# sesh_extra_dirs list in local.yml). Leading ~/ is expanded; blank
+# lines and # comments are skipped.
+EXTRA_DIRS=()
+extra_dirs_file="${XDG_CONFIG_HOME:-$HOME/.config}/sesh-extra-dirs"
+if [ -f "$extra_dirs_file" ]; then
+  while IFS= read -r line; do
+    case "$line" in '' | '#'*) continue ;; esac
+    EXTRA_DIRS+=("${line/#\~\//$HOME/}")
+  done < "$extra_dirs_file"
+fi
 
 # sesh's own directory icon (U+F114) in cyan; hex escape works under bash 3.2.
 DIR_ICON=$'\033[36m\xef\x84\x94\033[39m'
