@@ -1,7 +1,8 @@
 # sesh — smart tmux session manager. https://github.com/joshmedeski/sesh
 #
 # The picker list is built by sesh-picker.sh, which scans ~/code/*/* and adds a
-# few pinned paths (see EXTRA_DIRS in that script) — not zoxide history. The
+# few pinned paths (~/.config/sesh-extra-dirs, from sesh_extra_dirs in
+# local.yml) — not zoxide history. The
 # [[wildcard]] below is what makes a path-based `sesh connect` open the project
 # window layout, so keep it in sync with that scan pattern.
 

@@ -11,3 +11,10 @@ profile: personal
 # tasks/git.yml (the stowed .gitconfig includes that file).
 git_user_name: Your Name
 git_user_email: you@example.com
+
+# Non-repo directories the sesh picker (sesh-picker.sh) always offers,
+# in addition to ~/code/*/*. Written to ~/.config/sesh-extra-dirs by
+# tasks/tmux.yml. `~/` is expanded by the script; spaces are fine.
+sesh_extra_dirs:
+  - ~/.m/.ledger
+  - ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes

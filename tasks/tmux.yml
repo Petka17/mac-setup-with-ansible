@@ -14,6 +14,18 @@
     stow_mode: fold
     stow_creates: "{{ ansible_env.HOME }}/.config/sesh/sesh.toml"
 
+- name: Write sesh picker extra dirs from machine-local vars (local.yml)
+  # Lives directly in ~/.config, not ~/.config/sesh/ — that directory is a
+  # folded stow symlink into this repo, so a generated file there would land
+  # inside dotfiles/sesh/.
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/sesh-extra-dirs"
+    content: |
+      {% for dir in sesh_extra_dirs | default([]) %}
+      {{ dir }}
+      {% endfor %}
+    mode: "0644"
+
 - name: Stow tmux dotfiles
   # fold: tmux keeps no runtime state in ~/.config/tmux.
   ansible.builtin.import_tasks: stow.yml
