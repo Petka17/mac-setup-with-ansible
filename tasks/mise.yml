@@ -14,14 +14,19 @@
     stow_creates: "{{ ansible_env.HOME }}/.config/mise/config.toml"
 
 - name: Install mise tools
+  # mise reports to stderr; "all tools are installed" is its no-op message,
+  # anything else means at least one tool was actually installed.
   ansible.builtin.command:
     cmd: mise install
-  changed_when: false
+  register: mise_install
+  changed_when: "'all tools are installed' not in mise_install.stderr"
 
 - name: Upgrade mise tools
   # `mise install` only installs missing tools; loose pins like `latest`,
   # `lts`, and `nightly` resolve once and then freeze. `mise upgrade`
   # re-resolves them so those tools track new releases on every run.
+  # mise reports to stderr; "All tools are up to date" is its no-op message.
   ansible.builtin.command:
     cmd: mise upgrade
-  changed_when: false
+  register: mise_upgrade
+  changed_when: "'All tools are up to date' not in mise_upgrade.stderr"

@@ -167,4 +167,4 @@ To add a new tool's config: create `dotfiles/<tool>/<path-relative-to-home>/...`
 4. Import gpg private key
 5. Grant skhd Accessibility permission, then run `skhd --restart-service`
 6. Run `colima` when you need it
-7. Install browser extentions: Vimium, Measure Everything
+7. Install browser extensions: Vimium, Measure Everything

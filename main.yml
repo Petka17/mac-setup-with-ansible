@@ -81,10 +81,6 @@
       ansible.builtin.import_tasks: tasks/terminal.yml
       tags: [term]
 
-    - name: mkcert
-      ansible.builtin.import_tasks: tasks/mkcert.yml
-      tags: [mkcert]
-
     - name: mise
       ansible.builtin.import_tasks: tasks/mise.yml
       tags: [mise]
@@ -162,6 +158,14 @@
     - name: Browsers
       ansible.builtin.import_tasks: tasks/browsers.yml
       tags: [browsers]
+
+    - name: mkcert
+      # After browsers: mkcert -install can only reach Firefox's trust store
+      # once Firefox is installed, so install the browsers first instead of
+      # leaving that to a later run. (Firefox still has to be launched once
+      # to create a profile — the task runs every play, so that catches up.)
+      ansible.builtin.import_tasks: tasks/mkcert.yml
+      tags: [mkcert]
 
     - name: Mac Apps
       ansible.builtin.import_tasks: tasks/mac_apps.yml
