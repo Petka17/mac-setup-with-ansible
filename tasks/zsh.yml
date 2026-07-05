@@ -5,6 +5,27 @@
       - zsh-completions
     state: latest
 
+# A machine may come with real zsh dotfiles already in place (e.g. a
+# company-provisioned .zshrc, or Homebrew's installer appending to .zprofile),
+# which would make stow abort with a conflict. Move them aside to <name>.local —
+# the repo dotfiles source that file if present, so the original content keeps
+# applying, and it stays available as a permanent per-machine escape hatch.
+- name: Check for pre-existing zsh dotfiles
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/{{ item }}"
+  loop: [.zshrc, .zprofile, .zshenv]
+  register: zsh_dotfiles_stat
+
+- name: Preserve pre-existing zsh dotfiles as *.local
+  ansible.builtin.command:
+    # -n so an earlier backup is never silently overwritten
+    cmd: mv -n {{ item.stat.path }} {{ item.stat.path }}.local
+    creates: "{{ item.stat.path }}.local"
+  when: item.stat.exists and not item.stat.islnk
+  loop: "{{ zsh_dotfiles_stat.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+
 - name: Stow zsh dotfiles
   ansible.builtin.import_tasks: stow.yml
   vars:
