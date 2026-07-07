@@ -193,6 +193,18 @@ local snippets = {
     )
   ),
   s(
+    "rue",
+    fmt(
+      [[
+      React.useEffect(() => {{
+        {}
+      }}, [{}])
+      {}
+      ]],
+      { i(2), i(1), i(0) }
+    )
+  ),
+  s(
     "tni",
     fmt(
       [[
