@@ -43,6 +43,7 @@ return {
       },
     },
     vtsls = {
+      autoUseWorkspaceTsdk = true,
       experimental = {
         completion = { enableServerSideFuzzyMatch = true },
       },
