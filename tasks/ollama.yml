@@ -1,0 +1,11 @@
+---
+- name: Install Ollama menu bar app
+  # The cask (Ollama.app), not the `ollama` formula: it bundles the same CLI
+  # and server, but also registers itself as a login item on first launch and
+  # runs the server from the menu bar — no service management needed here.
+  # greedy: same reasoning as browsers.yml — the cask is marked auto_updates,
+  # which plain `brew upgrade` skips.
+  community.general.homebrew_cask:
+    name: ollama-app
+    state: latest
+    greedy: true

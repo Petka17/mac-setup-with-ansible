@@ -136,6 +136,10 @@
       ansible.builtin.import_tasks: tasks/opencode.yml
       tags: [opencode]
 
+    - name: Ollama
+      ansible.builtin.import_tasks: tasks/ollama.yml
+      tags: [ollama]
+
     - name: Grok Build
       ansible.builtin.import_tasks: tasks/grok.yml
       tags: [grok]
