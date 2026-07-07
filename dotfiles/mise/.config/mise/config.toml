@@ -8,6 +8,7 @@ bun = 'latest'
 python = ['3.11']
 go = 'latest'
 "npm:ungit" = "1.5.28"
+"npm:eas-cli" = "latest"
 
 [settings]
 # read version files used by other version managers, such as .nvmrc

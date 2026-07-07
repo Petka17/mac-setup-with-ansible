@@ -1,0 +1,18 @@
+---
+- name: Install CocoaPods
+  # Needed for React Native / Expo iOS builds: `npx expo run:ios` (and bare
+  # RN's `pod install`) resolve native dependencies through CocoaPods. The
+  # Homebrew formula bundles its own Ruby, so it avoids the deprecated system
+  # Ruby and needs no sudo or gem PATH setup — this is the install method the
+  # Expo docs recommend.
+  community.general.homebrew:
+    name: cocoapods
+    state: latest
+
+- name: Install Watchman
+  # Meta's file watcher — Metro uses it to watch the project tree and falls
+  # back to slower Node-based watching without it; recommended by the React
+  # Native docs.
+  community.general.homebrew:
+    name: watchman
+    state: latest
