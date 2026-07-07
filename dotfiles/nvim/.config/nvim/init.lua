@@ -26,6 +26,9 @@ require("keymaps")
 -- Bail out of Treesitter/format/LSP on oversized buffers before they load.
 require("custom.large-file")
 
+-- Centered single-window layout, toggled with <leader>z.
+require("custom.zen")
+
 -- Packages first so blink.cmp capabilities exist when servers attach
 require("pack")
 
