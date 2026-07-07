@@ -154,6 +154,10 @@
       ansible.builtin.import_tasks: tasks/docker.yml
       tags: [docker]
 
+    - name: React Native
+      ansible.builtin.import_tasks: tasks/react-native.yml
+      tags: [react_native]
+
     - name: AWS CLI
       ansible.builtin.import_tasks: tasks/aws.yml
       tags: [aws]
