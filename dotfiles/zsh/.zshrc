@@ -32,6 +32,7 @@ bindkey -v
 alias ..="cd .."
 alias ...="cd ../.."
 alias path='echo -e ${PATH//:/\\n}'
+alias c=clear
 
 # NeoVim
 alias v="nvim"
@@ -44,6 +45,10 @@ alias lt='eza --tree --icons'
 
 # bat
 alias cat='bat'
+
+# show filenames as they're copied/moved (no built-in progress bar/percentage)
+alias cp='cp -v'
+alias mv='mv -v'
 
 # Machine-local config not managed by this repo (e.g. corporate defaults
 # preserved from a pre-existing .zshrc on first provision — see tasks/zsh.yml).
