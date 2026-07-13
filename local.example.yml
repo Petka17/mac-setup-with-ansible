@@ -18,3 +18,4 @@ git_user_email: you@example.com
 sesh_extra_dirs:
   - ~/.m/.ledger
   - ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes
+  - ~/.agents/skills
