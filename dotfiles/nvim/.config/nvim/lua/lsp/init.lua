@@ -144,6 +144,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
           end
         end, bufnr)
       end, "TS: Go to Source Definition")
+
+      -- Toggle between "shortest" and "non-relative" for auto-import paths.
+      -- Does not require restarting the LSP client; new completions react immediately.
+      map(
+        "n",
+        "<leader>ti",
+        "<cmd>VtslsToggleImportStyle<CR>",
+        "TS: Toggle import style (shortest / non-relative)"
+      )
     end
 
     -- Inlay hints: off by default to keep the buffer quiet; <leader>th toggles
