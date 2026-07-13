@@ -133,6 +133,13 @@ vim.opt.statuscolumn = table.concat({
   "%{v:lua.require'statuscolumn'.number_column()} ", -- line numbers + gap before text
 })
 
+-- Command line
+-- Open the command-line window (cmdwin) with Ctrl+o instead of the default
+-- Ctrl+f. Wezterm binds Ctrl+f globally for the sesh session picker (see
+-- dotfiles/wezterm/.config/wezterm/wezterm.lua) and swallows it before Neovim
+-- sees it, so the default cedit key never fires here.
+vim.opt.cedit = vim.keycode("<C-o>")
+
 -- Text editing
 -- Configure automatic text formatting options. Must be `vim.opt`/`vim.o`, not
 -- `vim.g`: formatoptions is a buffer option, so `vim.g.formatoptions` only sets

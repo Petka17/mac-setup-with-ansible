@@ -70,8 +70,13 @@ local prettier = {
 -- breaks survive: prettier keeps markdown hard breaks (trailing "  " or "\") and
 -- never reflows code fences. --prose-wrap is a CLI flag, so it overrides any
 -- proseWrap a project sets in its own prettier config.
+--
+-- --no-semi drops trailing semicolons in embedded JS/TS code fences. Prettier
+-- formats fenced code (it doesn't reflow it, but it does reprint it), and its
+-- default is semi: true. Like --prose-wrap, this CLI flag wins over any project
+-- .prettierrc, so markdown snippets are consistently semicolon-free.
 local prettier_md = {
-  formatCommand = 'prettier --prose-wrap never --stdin-filepath "${INPUT}"',
+  formatCommand = 'prettier --prose-wrap never --no-semi --stdin-filepath "${INPUT}"',
   formatStdin = true,
 }
 
