@@ -39,9 +39,9 @@ local shfmt = {
 -- config-gated philosophy as the JS/TS pipeline in lua/lsp/ts_format.lua). We do
 -- NOT wire prettier for js/ts here — that path is owned by ts_format.lua, which
 -- short-circuits the format resolver, so an efm entry would be dead weight and
--- make efm attach to every TS buffer needlessly. Markdown has its own entry
--- (prettier_md below). `${INPUT}` is efm's template for the real filename,
--- letting prettier pick a parser.
+-- make efm attach to every TS buffer needlessly. Markdown is formatted by
+-- dprint instead (dprint_md below). `${INPUT}` is efm's template for the real
+-- filename, letting prettier pick a parser.
 local prettier = {
   formatCommand = 'prettier --stdin-filepath "${INPUT}"',
   formatStdin = true,
@@ -61,22 +61,28 @@ local prettier = {
   },
 }
 
--- Markdown gets its own prettier entry: ungated (no rootMarkers) and with
--- --prose-wrap never, so format-on-save reflows each paragraph back onto one
--- line instead of keeping authored mid-sentence breaks (prettier's default
--- proseWrap "preserve"). Unlike the config-gated `prettier` above, this runs on
--- EVERY markdown buffer — there's no per-project prettier config to opt into for
--- personal notes/READMEs, and unwrapping is the wanted default. Intentional
--- breaks survive: prettier keeps markdown hard breaks (trailing "  " or "\") and
--- never reflows code fences. --prose-wrap is a CLI flag, so it overrides any
--- proseWrap a project sets in its own prettier config.
+-- Markdown is formatted by dprint, not prettier. Prettier only pads GFM table
+-- columns up to printWidth (default 80) and squishes any wider table to
+-- single-space padding; it has no table-specific option, so the only lever is
+-- --print-width, which also stops embedded JS/TS code fences from wrapping.
+-- dprint's markdown plugin always pads tables to their widest cell regardless
+-- of lineWidth, so tables and code fences are tuned independently. The old
+-- prettier behaviors carry over via dprint-markdown.jsonc (config root):
+-- textWrap "never" reflows each paragraph onto one line (= --prose-wrap
+-- never; hard breaks survive, normalized to backslash form), and the
+-- typescript plugin reprints JS/TS fences at lineWidth 100 (global — see the
+-- comment in dprint-markdown.jsonc for why it can't be typescript-only) with
+-- asi semicolons (= --no-semi).
 --
--- --no-semi drops trailing semicolons in embedded JS/TS code fences. Prettier
--- formats fenced code (it doesn't reflow it, but it does reprint it), and its
--- default is semi: true. Like --prose-wrap, this CLI flag wins over any project
--- .prettierrc, so markdown snippets are consistently semicolon-free.
-local prettier_md = {
-  formatCommand = 'prettier --prose-wrap never --no-semi --stdin-filepath "${INPUT}"',
+-- Ungated (no rootMarkers) like the prettier entry it replaced: this runs on
+-- EVERY markdown buffer, since there's no per-project config to opt into for
+-- personal notes/READMEs. `--stdin md` passes a bare extension instead of
+-- ${INPUT} because dprint canonicalizes real paths and errors on buffers not
+-- yet written to disk; the extension is all it needs to pick the markdown
+-- plugin, and this entry only ever runs on markdown buffers.
+local dprint_md_config = vim.fn.stdpath("config") .. "/dprint-markdown.jsonc"
+local dprint_md = {
+  formatCommand = "dprint fmt --config " .. dprint_md_config .. " --stdin md",
   formatStdin = true,
 }
 
@@ -180,7 +186,7 @@ return {
       scss = { prettier },
       less = { prettier },
       html = { prettier },
-      markdown = { prettier_md, markdownlint },
+      markdown = { dprint_md, markdownlint },
       http = { kulala_fmt },
       sql = { sql_formatter },
     },
