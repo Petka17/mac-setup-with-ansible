@@ -5,7 +5,7 @@
 --
 --   1. eslint   -> source.fixAll.eslint   (LSP code action)
 --   2. oxlint   -> source.fixAll.oxc      (LSP code action)
---   3. biome    -> biome format           (CLI, stdin)
+--   3. biome    -> biome check --write    (CLI, stdin; format + organizeImports)
 --   4. dprint   -> dprint fmt             (CLI, stdin)
 --   5. oxfmt    -> oxfmt                  (CLI, stdin)
 --   6. prettier -> prettier              (CLI, stdin)
@@ -179,8 +179,13 @@ local cli_steps = {
     dir = function(b)
       return config_dir(b, { "biome.json", "biome.jsonc" })
     end,
+    -- `check --write` (not `format`) so the assist runs too — `organizeImports`
+    -- is a `check` action, `biome format` never touches imports. `--linter-enabled=
+    -- false` keeps this a pure format+assist pass: no lint autofixes on save (the
+    -- old `biome format` never applied them either), and no non-zero exit from
+    -- unfixable lint diagnostics that would make format_stdin discard the output.
     argv = function(bin, file)
-      return { bin, "format", "--stdin-file-path=" .. file }
+      return { bin, "check", "--write", "--linter-enabled=false", "--stdin-file-path=" .. file }
     end,
   },
   {

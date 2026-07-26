@@ -118,9 +118,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     map("n", "grd", vim.lsp.buf.definition, "LSP definition")
 
-    -- vtsls / ts_ls specific: skip re-export hops to the real source. The base
-    -- `gri` (vim.lsp.buf.implementation) is overwritten for vtsls buffers on
+    -- TypeScript servers: vtsls (classic tsserver, TS <=6) and effect_tsgo
+    -- (native TS7). The base `gri` (vim.lsp.buf.implementation) is overwritten on
     -- purpose — implementation is rarely useful when the type system resolves it.
+    -- Only vtsls exposes the typescript.goToSourceDefinition command; the native
+    -- server advertises no executeCommand commands, but its plain definition
+    -- already resolves through re-exports to source, so it maps straight to that.
     if client.name == "vtsls" then
       map("n", "gri", function()
         local params = vim.lsp.util.make_position_params(0, client.offset_encoding or "utf-16")
@@ -144,15 +147,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
           end
         end, bufnr)
       end, "TS: Go to Source Definition")
+    elseif client.name == "effect_tsgo" then
+      map("n", "gri", vim.lsp.buf.definition, "TS: Go to Definition (source)")
+    end
 
-      -- Toggle between "shortest" and "non-relative" for auto-import paths.
-      -- Does not require restarting the LSP client; new completions react immediately.
-      map(
-        "n",
-        "<leader>ti",
-        "<cmd>VtslsToggleImportStyle<CR>",
-        "TS: Toggle import style (shortest / non-relative)"
-      )
+    -- Toggle between "shortest" and "non-relative" for auto-import paths. Shared
+    -- across both TS servers (see lua/lsp/ts_import_style.lua). No LSP restart;
+    -- new completions react immediately.
+    if client.name == "vtsls" or client.name == "effect_tsgo" then
+      map("n", "<leader>ti", function()
+        require("lsp.ts_import_style").toggle(bufnr)
+      end, "TS: Toggle import style (shortest / non-relative)")
     end
 
     -- Inlay hints: off by default to keep the buffer quiet; <leader>th toggles
@@ -269,8 +274,11 @@ enable("lua_ls", "stylua", "efm")
 format.register("efm", 90)
 enable("bashls")
 
--- TypeScript LSP only (formatting/linting in later stages)
-enable("vtsls")
+-- TypeScript LSP only (formatting/linting in later stages). vtsls wraps the
+-- classic tsserver (TS <=6); effect_tsgo is the native TS7 server for
+-- @effect/tsgo projects. They're mutually exclusive per project (see the
+-- is_effect_tsgo_project guard in lsp/vtsls.lua), so enabling both is safe.
+enable("vtsls", "effect_tsgo")
 
 -- TypeScript formatting. The JS/TS format-on-save pipeline lives in
 -- lua/lsp/ts_format.lua (driven from lsp/format.lua); no formatter is registered
