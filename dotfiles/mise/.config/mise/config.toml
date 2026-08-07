@@ -6,13 +6,22 @@ pnpm = '10'
 yarn = '1.22.22'
 bun = 'latest'
 python = ['3.11']
+uv = 'latest'
 go = 'latest'
 "npm:ungit" = "1.5.28"
 "npm:eas-cli" = "latest"
 
+[env]
+# Make uv use the mise-activated Python (which sits on PATH via mise's shims)
+# instead of downloading and managing its own interpreters.
+UV_PYTHON_PREFERENCE = "only-system"
+
 [settings]
 # read version files used by other version managers, such as .nvmrc
 idiomatic_version_file_enable_tools = ['node', 'python']
+# Auto-activate a uv project's .venv on entering its directory (creating it if
+# missing). Only kicks in when a uv.lock is present.
+python.uv_venv_auto = "create|source"
 
 [settings.status]
 show_tools = false
