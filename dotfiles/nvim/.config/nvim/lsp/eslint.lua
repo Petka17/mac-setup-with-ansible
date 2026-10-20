@@ -27,6 +27,36 @@ local eslint_config_files = {
   "eslint.config.cts",
 }
 
+-- Find the directory ESLint itself would treat as the config root, honouring the
+-- legacy config cascade: from the file's directory, walk up collecting eslintrc
+-- files and stop at the first one that declares `root: true` (that config's
+-- directory is the root). If none does, ESLint merges configs all the way up, so
+-- the OUTERMOST config's directory is the effective root.
+--
+-- Rooting at the nearest config instead is wrong for monorepos like pos-web: the
+-- per-app `apps/*/.eslintrc.js` only adds settings and does not set `root: true`,
+-- while the monorepo-root config resolves `parserOptions.project` relative to its
+-- own (root) directory. Rooting at `apps/pos` made the server resolve
+-- `./tsconfig.base.json` against `apps/pos`, which does not exist.
+local function find_eslint_root(start)
+  local configs = vim.fs.find(eslint_config_files, { path = start, upward = true, limit = math.huge })
+  if #configs == 0 then
+    return nil
+  end
+  for _, cfg in ipairs(configs) do
+    local ok, lines = pcall(vim.fn.readfile, cfg)
+    if ok then
+      for _, line in ipairs(lines) do
+        -- Matches `root: true` (JS) and `"root": true` (JSON), any quoting/spacing.
+        if line:match("['\"]?root['\"]?%s*:%s*true") then
+          return vim.fs.dirname(cfg)
+        end
+      end
+    end
+  end
+  return vim.fs.dirname(configs[#configs])
+end
+
 ---@type vim.lsp.Config
 return {
   cmd = function(dispatchers, config)
@@ -54,17 +84,17 @@ return {
   -- A function root_dir (instead of root_markers) so we can (a) skip Deno
   -- projects, which use deno_lint rather than eslint, and (b) still gate on an
   -- eslint config being present — attach only where one is found upward, rooting
-  -- at its directory. "eslint client attached" therefore still means "eslint is
-  -- configured for this project".
+  -- at the config-cascade root (see find_eslint_root). "eslint client attached"
+  -- therefore still means "eslint is configured for this project".
   root_dir = function(bufnr, on_dir)
     if js_project.is_deno_project(bufnr) then
       return
     end
     local name = vim.api.nvim_buf_get_name(bufnr)
     local start = name ~= "" and vim.fs.dirname(name) or vim.fn.getcwd()
-    local cfg = vim.fs.find(eslint_config_files, { path = start, upward = true })[1]
-    if cfg then
-      on_dir(vim.fs.dirname(cfg))
+    local root = find_eslint_root(start)
+    if root then
+      on_dir(root)
     end
   end,
   -- The vscode-eslint server pulls per-document config via workspace/configuration
