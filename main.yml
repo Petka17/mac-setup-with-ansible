@@ -90,6 +90,15 @@
       ansible.builtin.import_tasks: tasks/mise.yml
       tags: [mise]
 
+    - name: MnemoSSH
+      # After mise: cargo comes from the mise-managed rust toolchain.
+      ansible.builtin.import_tasks: tasks/mnemossh.yml
+      tags: [mnemossh]
+
+    - name: BorgBackup
+      ansible.builtin.import_tasks: tasks/borg.yml
+      tags: [borg]
+
     - name: zsh
       ansible.builtin.import_tasks: tasks/zsh.yml
       tags: [zsh]

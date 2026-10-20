@@ -1,0 +1,13 @@
+---
+- name: Install MnemoSSH
+  # Only distributed as a crate. Runs through `mise exec` because cargo comes
+  # from the rust toolchain in the mise config (installed by tasks/mise.yml)
+  # and isn't on Ansible's PATH. cargo install is idempotent: it no-ops when
+  # the latest version is already installed and upgrades otherwise, so this
+  # also keeps MnemoSSH current. --locked builds with the crate's published
+  # Cargo.lock instead of re-resolving dependencies.
+  ansible.builtin.command:
+    cmd: mise exec -- cargo install --locked mnemossh
+  register: mnemossh_install
+  # cargo reports to stderr; "is already installed" is its no-op message.
+  changed_when: "'is already installed' not in mnemossh_install.stderr"

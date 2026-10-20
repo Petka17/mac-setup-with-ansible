@@ -1,0 +1,7 @@
+---
+- name: Install BorgBackup
+  # homebrew-core's formula is built without FUSE, so `borg mount` is
+  # unavailable; everything else (init/create/extract/prune) works.
+  community.general.homebrew:
+    name: borgbackup
+    state: latest
