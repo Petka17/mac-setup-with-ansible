@@ -28,6 +28,11 @@ return {
   end,
   settings = {
     typescript = {
+      -- Default tsserver heap cap is 3072 MB, which OOM-crashes tsserver on huge
+      -- monorepos (the "language service crashed 5 times" prompt). vtsls passes
+      -- this through as --max-old-space-size to the tsserver process, same as
+      -- VSCode's typescript.tsserver.maxTsServerMemory. Raise further if needed.
+      tsserver = { maxTsServerMemory = 12288 },
       inlayHints = {
         parameterNames = { enabled = "literals" },
         parameterTypes = { enabled = true },
