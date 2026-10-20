@@ -19,7 +19,11 @@ m1ddc=/opt/homebrew/bin/m1ddc
 display=$("$m1ddc" display list | sed -n 's/^\[\([0-9]*\)\] BenQ.*/\1/p' | head -n 1)
 [[ -n $display ]] || { echo "monitor-switch: no BenQ display found" >&2; exit 1; }
 
-if ioreg -l | grep -q '"Downstream"="HDMI"'; then
+# -w0: ioreg clips lines to the screen width by default, which can cut the
+# deeply indented Transport line before "HDMI". No grep -q: it exits at the
+# first match, ioreg dies of SIGPIPE, and pipefail turns the match into a
+# failure (exit 141).
+if ioreg -l -w0 | grep -F '"Downstream"="HDMI"' >/dev/null; then
   input=15 # this Mac is on HDMI -> the USB-C Mac
 else
   input=17 # this Mac is on USB-C -> the HDMI Mac
