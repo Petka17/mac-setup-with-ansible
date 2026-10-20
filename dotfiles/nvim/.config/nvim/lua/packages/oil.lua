@@ -45,6 +45,13 @@ require("oil").setup({
     ["~"] = { "actions.cd", opts = { scope = "tab" }, desc = ":tcd to the current oil dir" },
     ["gs"] = "actions.change_sort",
     ["gx"] = "actions.open_external",
+    -- Yank the entry's path relative to the cwd (`:.`). Lands in the system
+    -- clipboard via `clipboard = "unnamedplus"`; prefix a register to override.
+    ["gy"] = {
+      "actions.yank_entry",
+      opts = { modify = ":." },
+      desc = "Yank the relative path of the entry",
+    },
     ["g."] = "actions.toggle_hidden",
     ["g\\"] = "actions.toggle_trash",
   },

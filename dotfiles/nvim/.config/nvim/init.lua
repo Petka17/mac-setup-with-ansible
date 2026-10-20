@@ -29,6 +29,9 @@ require("custom.large-file")
 -- Centered single-window layout, toggled with <leader>z.
 require("custom.zen")
 
+-- Floating-buffer vim.ui.input (LSP rename prompt) with input() history.
+require("custom.input")
+
 -- Packages first so blink.cmp capabilities exist when servers attach
 require("pack")
 

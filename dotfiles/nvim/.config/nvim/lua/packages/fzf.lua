@@ -13,6 +13,12 @@ fzf.setup({
     -- Mirror the old telescope layout: preview on the right at 55% width.
     preview = { layout = "horizontal", horizontal = "right:55%" },
   },
+  fzf_opts = {
+    -- Wrap around the result list: <ctrl-p> on the first item jumps to the last
+    -- and <ctrl-n> on the last jumps back to the first. Merges with fzf-lua's
+    -- default fzf_opts rather than replacing them.
+    ["--cycle"] = true,
+  },
   keymap = {
     fzf = {
       -- Replicate telescope's <ctrl-q>: send the whole (filtered) result list to
