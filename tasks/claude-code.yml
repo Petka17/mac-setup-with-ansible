@@ -5,7 +5,7 @@
   # update it (see tasks/browsers.yml). greedy makes brew own the update.
   community.general.homebrew_cask:
     name:
-      - claude-code
+      - claude-code@latest
       - claude
     state: latest
     greedy: true
