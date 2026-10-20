@@ -1,0 +1,58 @@
+---
+- name: Install WireGuard tools
+  # wireguard-tools: CLI only (wg, wg-quick); pulls in wireguard-go as the
+  # userspace backend. qrencode: renders a peer config as a QR code for the
+  # iOS app to scan (`qrencode -t ansiutf8 < peer.conf`).
+  community.general.homebrew:
+    name:
+      - wireguard-tools
+      - qrencode
+    state: latest
+
+- name: Install WireGuard app from the Mac App Store
+  # The official GUI client ships only through the App Store — there is no
+  # cask — so this relies on mas from tasks/mas.yml.
+  # `get`, not `install`: install only works for apps already obtained on the
+  # Apple Account, get covers a first-time free app too.
+  # Runs as root: mas needs root for get/install and its internal sudo can't
+  # prompt inside a tty-less Ansible task (same as mkcert.yml).
+  # Not community.general.mas: it only ever calls `mas install`. No
+  # `state: latest` equivalent either — the App Store owns updates.
+  ansible.builtin.command: mas get 1451685025
+  args:
+    creates: /Applications/WireGuard.app
+  become: true
+
+- name: Install AmneziaVPN
+  # GUI client for AmneziaWG (obfuscated WireGuard) and plain WireGuard.
+  # pkg-installer cask: the installer calls sudo internally, so pass the
+  # playbook's sudo password (see tasks/veracrypt.yml).
+  # greedy: keeps cask handling uniform (see tasks/browsers.yml).
+  community.general.homebrew_cask:
+    name: amneziavpn
+    state: latest
+    sudo_password: "{{ sudo_password }}"
+    greedy: true
+
+- name: Read the Wi-Fi IPv6 mode
+  ansible.builtin.command: networksetup -getinfo Wi-Fi
+  register: wifi_info
+  changed_when: false
+
+- name: Turn IPv6 off on Wi-Fi
+  # AmneziaVPN's kill switch rejects all outgoing IPv6 (the tunnel and its
+  # exit are IPv4-only), but Wi-Fi still gets an IPv6 address from the router,
+  # so apps keep trying IPv6 first. Most fall back to IPv4; curl sometimes
+  # commits to the rejected IPv6 connection instead, which made `brew update`
+  # fail about one run in six. With IPv6 off, macOS stops offering IPv6
+  # addresses to apps at all.
+  # The setting persists while the VPN is down too; undo it with
+  # `networksetup -setv6automatic Wi-Fi`.
+  # Changing it while AmneziaVPN is connected drops the DNS servers the client
+  # injected into the Wi-Fi service, and its kill switch blocks every other
+  # resolver, so name resolution stays dead until the VPN reconnects. Once
+  # IPv6 is off this task is a no-op, so that only bites on the run that
+  # flips it: reconnect the VPN and re-run.
+  ansible.builtin.command: networksetup -setv6off Wi-Fi
+  become: true
+  when: "'IPv6: Off' not in wifi_info.stdout"

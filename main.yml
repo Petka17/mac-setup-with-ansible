@@ -73,6 +73,11 @@
       ansible.builtin.import_tasks: tasks/homebrew.yml
       tags: [homebrew]
 
+    - name: mas
+      ansible.builtin.import_tasks: tasks/mas.yml
+      tags: [mas]
+      when: profile == 'personal'
+
     - name: Fonts
       ansible.builtin.import_tasks: tasks/fonts.yml
       tags: [fonts]
@@ -148,6 +153,12 @@
     - name: VeraCrypt
       ansible.builtin.import_tasks: tasks/veracrypt.yml
       tags: [veracrypt]
+      when: profile == 'personal'
+
+    - name: WireGuard
+      # After mas: the GUI client is installed from the Mac App Store.
+      ansible.builtin.import_tasks: tasks/wireguard.yml
+      tags: [wireguard]
       when: profile == 'personal'
 
     - name: Docker

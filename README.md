@@ -37,6 +37,8 @@ cp local.example.yml local.yml   # then edit: profile + git identity
 
 The playbook prompts for your sudo password once (`vars_prompt` in `main.yml`) — a few casks use it for post-install steps.
 
+Sign in to the App Store app before the first run: the WireGuard GUI client is App Store-only and is installed through `mas`, which can't sign in for you.
+
 ## Updating / running a subset
 
 Each task file carries a tag, so you can install or update just one area instead of the whole machine:
@@ -51,7 +53,7 @@ The tag for each area is listed next to its `import_tasks` line in `main.yml`.
 
 Run with no tags to do everything. Re-running is safe — every task is idempotent.
 
-Tag subsets are for **updating an already-provisioned machine**. A fresh machine must do a full run first (`./bootstrap.sh` with no tags): tagged areas assume the base layer is already in place — `stow` from the `term` tag, `neovim` and the Go toolchain from `mise` — so something like `--tags nvim` on a bare machine fails.
+Tag subsets are for **updating an already-provisioned machine**. A fresh machine must do a full run first (`./bootstrap.sh` with no tags): tagged areas assume the base layer is already in place — `stow` from the `term` tag, `neovim` and the Go toolchain from `mise`, `mas` from the `mas` tag — so something like `--tags nvim` on a bare machine fails.
 
 The sudo password is prompted on **every** run, even for tag subsets that never escalate — `vars_prompt` in `main.yml` runs before Ansible knows which tasks are selected. Just enter it; only tasks that actually need root use it.
 

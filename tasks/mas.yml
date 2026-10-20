@@ -1,0 +1,7 @@
+---
+- name: Install mas
+  # Mac App Store CLI, for apps that ship only through the App Store (no
+  # cask). Requires an Apple Account signed in to the App Store app.
+  community.general.homebrew:
+    name: mas
+    state: latest
