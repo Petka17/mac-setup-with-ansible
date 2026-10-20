@@ -8,7 +8,8 @@
 # everything while each route stays directly scriptable.
 #
 #   switch — pick an existing worktree, create-or-switch its tmux session
-#   new    — pick an existing branch, add a worktree for it, open a session
+#   new    — pick a local or remote branch, add a worktree for it, open a
+#            session; picking a remote branch creates a local branch tracking it
 #   branch — type a new branch name, add a worktree for it, open a session
 #   remove — pick a worktree, delete it (confirm if dirty) + kill its session
 #
@@ -92,20 +93,81 @@ do_switch() {
   connect "$(session_name "$branch")" "$wt_path"
 }
 
-do_new() {
-  # Branches already checked out anywhere (incl. main) can't get a second
-  # worktree — git enforces one checkout per branch — so hide them.
-  local used branch wt_path
+# Branches a new worktree can be built on, as "name<TAB>kind<TAB>ref".
+#
+# Locals already checked out anywhere (incl. the main repo) are hidden: git
+# enforces one checkout per branch. Remotes are offered only while no local
+# branch of that name exists — once one does, the local entry (or the worktree
+# already holding it) is the way in, so listing both would just duplicate.
+list_branch_candidates() {
+  local used locals
   used=$(git -C "$main_repo" worktree list --porcelain \
     | sed -n 's|^branch refs/heads/||p')
-  branch=$(git -C "$main_repo" for-each-ref refs/heads \
-    --format='%(refname:short)' \
-    | grep -vxF -f <(printf '%s\n' "$used") \
-    | "${FZF[@]}" --border-label ' worktree from branch ') || true
-  [ -z "$branch" ] && exit 0
+  locals=$(git -C "$main_repo" for-each-ref refs/heads --format='%(refname:short)')
+
+  grep -vxF -f <(printf '%s\n' "$used") <<< "$locals" \
+    | awk '{ printf "%s\tlocal\t%s\n", $0, $0 }'
+
+  # %(symref) is non-empty only for refs/remotes/*/HEAD, an alias for another
+  # entry rather than a branch of its own.
+  git -C "$main_repo" for-each-ref refs/remotes \
+    --format=$'%(symref)\t%(refname:short)' \
+    | awk -F'\t' '
+      NR == FNR { known[$0] = 1; next }
+      $1 != ""  { next }
+      { name = $2; sub(/^[^\/]+\//, "", name)
+        if (!(name in known)) printf "%s\tremote\t%s\n", $2, $2 }' \
+      <(printf '%s\n' "$locals") -
+}
+
+# Tag remote entries, padded past the longest name so the tags line up.
+label_candidates() {
+  awk -F'\t' '
+    { name[NR] = $1; kind[NR] = $2; ref[NR] = $3
+      if (length($1) > width) width = length($1) }
+    END { tagged = "%-" (width + 2) "s\033[2m(remote)\033[0m\t%s\t%s\n"
+          for (i = 1; i <= NR; i++)
+            if (kind[i] == "remote") printf tagged, name[i], kind[i], ref[i]
+            else printf "%s\t%s\t%s\n", name[i], kind[i], ref[i] }'
+}
+
+do_new() {
+  local candidates selected kind ref branch wt_path track=()
+
+  # Remote-tracking refs go stale silently, so refresh before listing them.
+  # A missing network is not fatal — fall back to whatever is already known.
+  printf 'fetching remotes… '
+  if git -C "$main_repo" fetch --all --prune --quiet 2> /dev/null; then
+    printf 'done\n'
+  else
+    printf 'unavailable — showing known branches\n'
+  fi
+
+  candidates=$(list_branch_candidates)
+  if [ -z "$candidates" ]; then
+    echo "every branch is already checked out — use 'branch' for a new one" >&2
+    sleep 1.5
+    exit 0
+  fi
+
+  selected=$(label_candidates <<< "$candidates" | "${FZF[@]}" \
+    --delimiter=$'\t' --with-nth=1 --accept-nth=2,3 \
+    --border-label ' worktree from branch ') || true
+  [ -z "$selected" ] && exit 0
+  IFS=$'\t' read -r kind ref <<< "$selected"
+
+  # A remote pick needs the local branch created and wired to the remote, and
+  # it names itself after the branch without the remote: origin/foo → foo. A
+  # local pick is a plain checkout, where the ref already is the branch.
+  if [ "$kind" = remote ]; then
+    branch=${ref#*/}
+    track=(--track -b "$branch")
+  else
+    branch=$ref
+  fi
   wt_path=$wt_root/$(branch_to_dir "$branch")
   mkdir -p "$wt_root"
-  git -C "$main_repo" worktree add "$wt_path" "$branch"
+  git -C "$main_repo" worktree add "${track[@]}" "$wt_path" "$ref"
   connect "$(session_name "$branch")" "$wt_path"
 }
 
@@ -152,7 +214,7 @@ route="${1:-}"
 if [ -z "$route" ]; then
   route=$(printf '%s\n' \
     $'switch\tjump to an existing worktree' \
-    $'new\tnew worktree from an existing branch' \
+    $'new\tnew worktree from a local or remote branch' \
     $'branch\tnew worktree on a new branch' \
     $'remove\tdelete a worktree (and its session)' \
     | "${FZF[@]}" --delimiter=$'\t' --accept-nth=1 \
