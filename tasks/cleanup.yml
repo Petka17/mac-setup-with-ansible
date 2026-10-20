@@ -16,8 +16,13 @@
 - name: Prune mise tool versions no longer referenced by any config
   # Loose pins like `latest` leave the previous version behind after every
   # `mise upgrade`; prune deletes versions no tracked config points at
-  # anymore. Runs without confirmation and only touches mise-managed
-  # installs under ~/.local/share/mise.
+  # anymore. --yes because prune asks for confirmation and Ansible gives it no
+  # TTY to ask on. Only touches mise-managed installs under
+  # ~/.local/share/mise.
   ansible.builtin.command:
-    cmd: mise prune
-  changed_when: false
+    cmd: mise prune --yes
+  register: mise_prune
+  # mise reports to stderr, but unlike the brew commands above it is never
+  # silent: it always logs "pruned configuration links". The per-version
+  # "uninstall" lines appear only when a version is actually deleted.
+  changed_when: "'uninstall' in mise_prune.stderr"
