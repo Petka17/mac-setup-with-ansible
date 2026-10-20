@@ -12,3 +12,9 @@
   vars:
     stow_package: grok
     stow_mode: restow
+
+- name: Install Grok Bot
+  community.general.homebrew_cask:
+    name: grok-bot
+    state: latest
+    greedy: true
