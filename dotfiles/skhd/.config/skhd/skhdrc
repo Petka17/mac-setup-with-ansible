@@ -1,1 +1,6 @@
 ctrl + alt - p : ~/.local/bin/pass.sh
+# F20 from the Corne's Monitor layer. skhd gives the f1-f20 names an implicit
+# fn modifier, but the Corne's F20 arrives without it, so bind the raw keycode
+# (0x5A) too.
+f20 : ~/.local/bin/monitor-switch
+0x5A : ~/.local/bin/monitor-switch

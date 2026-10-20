@@ -1,0 +1,35 @@
+---
+- name: Install the QMK CLI, toolchains, and flashing utilities
+  # QMK's official installer: brew deps, the qmk CLI as a uv tool (into
+  # ~/.local/bin), plus prebuilt AVR/ARM toolchains and flashing utilities
+  # (avrdude, dfu-util, ...) under ~/Library/Application Support/qmk.
+  # --skip-uv: uv comes from the mise config, so run under `mise exec` to put
+  # it on PATH (same as tasks/mnemossh.yml). --confirm skips the installer's
+  # countdown. One-shot: re-running it re-downloads everything, so upgrades
+  # are a manual `uv tool upgrade qmk`.
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      curl -fsSL https://install.qmk.fm |
+      mise exec -- sh -s -- --confirm --skip-uv
+    executable: /bin/bash
+    creates: "{{ ansible_env.HOME }}/.local/bin/qmk"
+
+- name: Clone qmk_firmware
+  # `qmk setup` clones qmk/qmk_firmware (with submodules) into ~/qmk_firmware
+  # and runs `qmk doctor`. --yes answers its prompts.
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/qmk setup --yes"
+    creates: "{{ ansible_env.HOME }}/qmk_firmware"
+
+- name: Point QMK at this repo's userspace and default build target
+  # External userspace: keymaps live in qmk/ of this repo instead of inside
+  # qmk_firmware. With keyboard + keymap set, a bare `qmk compile` / `qmk flash`
+  # builds the Corne. `qmk config` rewrites the same values on every run.
+  ansible.builtin.command:
+    cmd: >-
+      {{ ansible_env.HOME }}/.local/bin/qmk config
+      user.overlay_dir={{ playbook_dir }}/qmk
+      user.keyboard=crkbd/rev1
+      user.keymap=petka
+  changed_when: false

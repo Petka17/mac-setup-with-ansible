@@ -1,0 +1,8 @@
+---
+- name: Install m1ddc
+  # DDC/CI control of external displays on Apple Silicon. Used by
+  # ~/.local/bin/monitor-switch to flip the BenQ's input (and with it its KVM)
+  # between the two Macs.
+  community.general.homebrew:
+    name: m1ddc
+    state: latest

@@ -11,3 +11,6 @@ local.yml
 .ansible/
 
 .claude
+
+# QMK build output (qmk compile copies the firmware into the userspace)
+/qmk/*.hex

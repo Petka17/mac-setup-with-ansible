@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Switch the BenQ RD280UA to the other Mac. Its KVM follows the video input,
+# so the keyboard and mouse move along. Bound to F20 in skhdrc; the Corne sends
+# F20 from its Monitor layer.
+#
+# One Mac is on the monitor's USB-C port, the other on its HDMI port, and each
+# sends the other's input. Which port this Mac is on comes from the display's
+# IORegistry "Transport": USB-C is DP all the way, the built-in HDMI port is
+# DP -> HDMI. Assumes the BenQ is the only external display.
+#
+# The BenQ's own input codes (`get input` always reports 17, so they were
+# found by trial): 15 = USB-C, 17 = HDMI.
+
+set -euo pipefail
+
+m1ddc=/opt/homebrew/bin/m1ddc
+
+display=$("$m1ddc" display list | sed -n 's/^\[\([0-9]*\)\] BenQ.*/\1/p' | head -n 1)
+[[ -n $display ]] || { echo "monitor-switch: no BenQ display found" >&2; exit 1; }
+
+if ioreg -l | grep -q '"Downstream"="HDMI"'; then
+  input=15 # this Mac is on HDMI -> the USB-C Mac
+else
+  input=17 # this Mac is on USB-C -> the HDMI Mac
+fi
+
+"$m1ddc" display "$display" set input "$input"

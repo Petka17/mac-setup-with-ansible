@@ -132,10 +132,13 @@
       tags: [pass]
       when: profile == 'personal'
 
+    - name: m1ddc
+      ansible.builtin.import_tasks: tasks/m1ddc.yml
+      tags: [m1ddc]
+
     - name: skhd
       ansible.builtin.import_tasks: tasks/skhd.yml
       tags: [skhd]
-      when: profile == 'personal'
 
     - name: Ledger
       ansible.builtin.import_tasks: tasks/ledger.yml
@@ -161,6 +164,12 @@
     - name: Grok Build
       ansible.builtin.import_tasks: tasks/grok.yml
       tags: [grok]
+      when: profile == 'personal'
+
+    - name: QMK
+      # After mise: the QMK installer runs on mise's uv.
+      ansible.builtin.import_tasks: tasks/qmk.yml
+      tags: [qmk]
       when: profile == 'personal'
 
     - name: VeraCrypt

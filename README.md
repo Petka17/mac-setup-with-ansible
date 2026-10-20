@@ -61,7 +61,7 @@ You can also pass any other `ansible-playbook` flag straight through, e.g. `./bo
 
 ## Machine profiles & local vars
 
-Two profiles exist: `personal` (the default) and `work`. The work profile skips personal-only areas (pass/gnupg, skhd, ledger, grok, veracrypt, aws, mac_apps) and installs a smaller browser set. Profile-scoped lists live in the committed `vars/personal.yml` and `vars/work.yml`.
+Two profiles exist: `personal` (the default) and `work`. The work profile skips personal-only areas (pass/gnupg, ledger, grok, qmk, veracrypt, aws, mac_apps) and installs a smaller browser set. Profile-scoped lists live in the committed `vars/personal.yml` and `vars/work.yml`.
 
 Machine-scoped settings — which profile this box runs, plus your git identity (written to `~/.gitconfig.local`, which the stowed `.gitconfig` includes) — live in a gitignored `local.yml`. Once per machine, after cloning:
 
@@ -86,7 +86,8 @@ mac-setup-with-ansible/
 │   ├── terminal.yml       # CLI utilities incl. stow (tag: term)
 │   ├── mise.yml           # dev toolchain versions (tag: mise)
 │   └── ...                # one file per tool — see main.yml for the full list
-└── dotfiles/              # GNU Stow packages, symlinked into $HOME
+├── dotfiles/              # GNU Stow packages, symlinked into $HOME
+└── qmk/                   # Corne keyboard firmware (QMK userspace) — see qmk/README.md
 ```
 
 To add a new area: drop a `tasks/<name>.yml` with its package list inline, and add one tagged `import_tasks` line to `main.yml`.
