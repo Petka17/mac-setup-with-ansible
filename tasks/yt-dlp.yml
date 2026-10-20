@@ -1,0 +1,10 @@
+---
+- name: Install yt-dlp and ffmpeg
+  # ffmpeg: yt-dlp needs it to merge the separate best-video and best-audio
+  # streams into one file. state: latest matters for yt-dlp in particular —
+  # it breaks whenever YouTube changes something, and the fix is an upgrade.
+  community.general.homebrew:
+    name:
+      - yt-dlp
+      - ffmpeg
+    state: latest

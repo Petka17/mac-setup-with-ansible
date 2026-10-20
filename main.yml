@@ -142,6 +142,10 @@
       tags: [ledger]
       when: profile == 'personal'
 
+    - name: yt-dlp
+      ansible.builtin.import_tasks: tasks/yt-dlp.yml
+      tags: [yt_dlp]
+
     - name: Claude Code
       ansible.builtin.import_tasks: tasks/claude-code.yml
       tags: [claude]
