@@ -3,4 +3,3 @@
 browsers:
   - arc
   - ungoogled-chromium
-  - firefox@developer-edition
